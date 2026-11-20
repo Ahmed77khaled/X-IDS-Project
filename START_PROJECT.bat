@@ -106,39 +106,10 @@ echo [OK] Kernel registered as default: "Python (X-IDS Machine Learning)"
 echo.
 
 :: ----------------------------------------------------------------------------
-:: 6. Check Dataset Presence & Smart Downloader
+:: 6. Smart Dataset Verification & Auto-Resolver (4 Intelligent Scenarios)
 :: ----------------------------------------------------------------------------
-echo [*] Checking dataset availability...
-set "DATASET_FILE=Dataset\CICIDS2017_improved\wednesday.csv"
-if exist "%DATASET_FILE%" (
-    echo [OK] Dataset verified: %DATASET_FILE%
-) else (
-    echo.
-    echo ==============================================================================
-    echo                          DATASET VERIFICATION
-    echo ==============================================================================
-    echo The benchmark dataset (wednesday.csv) is not found locally.
-    echo Official Research Source URL:
-    echo https://intrusion-detection.distrinet-research.be/CNS2022/Datasets/CICIDS2017_improved.zip
-    echo.
-    set /p "USER_HAS_DATA=Did you already download the dataset from this link? (Y/N): "
-    if /i "!USER_HAS_DATA!"=="Y" (
-        echo.
-        echo [!] Please extract 'wednesday.csv' into:
-        echo     Dataset\CICIDS2017_improved\wednesday.csv
-        echo.
-    ) else (
-        echo.
-        echo [*] Downloading dataset automatically from official research source (~320 MB)...
-        echo [*] Please wait a moment while the download completes...
-        if not exist "Dataset\CICIDS2017_improved" mkdir "Dataset\CICIDS2017_improved"
-        powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $wc = New-Object System.Net.WebClient; $wc.DownloadFile('https://intrusion-detection.distrinet-research.be/CNS2022/Datasets/CICIDS2017_improved.zip', 'Dataset\CICIDS2017_improved.zip')"
-        echo [*] Extracting dataset files into Dataset\CICIDS2017_improved\...
-        powershell -Command "Expand-Archive -Path 'Dataset\CICIDS2017_improved.zip' -DestinationPath 'Dataset\CICIDS2017_improved' -Force"
-        if exist "Dataset\CICIDS2017_improved.zip" del /f /q "Dataset\CICIDS2017_improved.zip"
-        echo [OK] Dataset downloaded and extracted successfully!
-    )
-)
+echo [*] Checking dataset availability and auto-resolving...
+python setup_dataset.py
 echo.
 
 :: ----------------------------------------------------------------------------
@@ -163,6 +134,7 @@ echo                         ALL SYSTEMS READY! 🚀
 echo ==============================================================================
 echo  [OK] Virtual Environment (.venv) is activated.
 echo  [OK] All ML libraries are verified.
+echo  [OK] Dataset is verified in Dataset\CICIDS2017_improved\
 echo  [OK] Kernel is pre-selected: Python (X-IDS Machine Learning)
 echo  [OK] Notebook 'my_model_training.ipynb' is open and ready.
 echo ==============================================================================
