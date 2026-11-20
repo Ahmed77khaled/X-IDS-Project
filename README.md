@@ -1,12 +1,12 @@
 <div align="center">
 
-# 🌐 &nbsp; [English 🇺🇸](#-english-version) &nbsp;&nbsp;|&nbsp;&nbsp; [العربية 🇪🇬](#-النسخة-العربية)
-
----
+# 🌐 &nbsp; [English 🇺🇸](#english) &nbsp;&nbsp;&bull;&nbsp;&nbsp; [العربية 🇪🇬](#arabic)
 
 </div>
 
-<a id="english-version"></a>
+---
+
+<div id="english"></div>
 
 # 🛡️ X-IDS: Explainable AI Network Intrusion Detection System
 > **An End-to-End Explainable Machine Learning Pipeline for Network Intrusion Detection & Security Analytics**  
@@ -41,6 +41,7 @@ If you are running on Windows, **you do not need to install or configure anythin
    * ✅ **Python Verification:** Checks if Python is installed; if missing, automatically downloads and installs Python with PATH configuration enabled.
    * ✅ **Virtual Environment:** Creates and isolates `.venv`.
    * ✅ **Dependencies:** Installs all machine learning dependencies (`pandas`, `numpy`, `scikit-learn`, `xgboost`, `shap`, `ipykernel`).
+   * ✅ **Smart Dataset Handling:** Checks for `wednesday.csv`. If missing, prompts to download and extract it automatically from the official [DistriNet Research Repository](https://intrusion-detection.distrinet-research.be/CNS2022/Datasets/CICIDS2017_improved.zip).
    * ✅ **VS Code Integration:** Silently installs the VS Code Python & Jupyter extensions.
    * ✅ **Kernel Auto-Binding:** Sets **`Python (X-IDS Machine Learning)`** as the pre-selected kernel.
    * ✅ **Ready-to-Run Launch:** Launches VS Code directly into `my_model_training.ipynb`, fully bound and ready to run immediately.
@@ -66,7 +67,7 @@ X-IDS-Project/
 ├── setup.bat                      # Standard environment setup alias
 ├── my_model_training.ipynb        # Primary interactive guided notebook (Tasks 1-9)
 ├── requirements.txt               # Pinned dependencies for Python
-├── README.md                      # Unified documentation (English + Arabic RTL)
+├── README.md                      # Unified documentation (English & Arabic RTL)
 ├── .gitignore                     # Optimized exclusion rules (dataset & secrets protected)
 │
 ├── audio/                         # Curated voiceover narration (Fel7o Persona)
@@ -116,25 +117,27 @@ X-IDS-Project/
 
 ---
 
-<a id="النسخة-العربية"></a>
+<div id="arabic"></div>
 
 <div dir="rtl" align="right">
 
-# 🛡️ النسخة العربية: مشروع X-IDS لكشف اختراقات الشبكة بالذكاء الاصطناعي وتفسير القرارات
-> **منظومة متكاملة لكشف التسلل السيبراني وتفسير قرارات نماذج التعلم الآلي لمهندسي مراكز العمليات الأمنية (SOC)**  
-> *مشروع تخرج أكاديمي — مبني على داتاسيت CIC-IDS2017 Improved*
+## 🇪🇬 الشرح باللغة العربية (RTL)
 
 <div align="center">
 
-[⬆️ العودة للنسخة الإنجليزية (Back to Top)](#-english-version)
+[⬆️ العودة للأعلى (Back to Top)](#english)
 
 </div>
 
+### 🛡️ مشروع X-IDS: كشف اختراقات الشبكة بالذكاء الاصطناعي وتفسير القرارات
+> **منظومة متكاملة لكشف التسلل السيبراني وتفسير قرارات نماذج التعلم الآلي لمهندسي مراكز العمليات الأمنية (SOC)**  
+> *مشروع تخرج أكاديمي — مبني على داتاسيت CIC-IDS2017 Improved*
+
 ---
 
-## ⚡ التشغيل الفوري بنقرة واحدة (بدون أي إعدادات يدوية)
+### ⚡ التشغيل الفوري بنقرة واحدة (بدون أي إعدادات يدوية)
 
-لو أنت شغال على ويندوز، **مش محتاج تسطب أو تظبط أي حاجة بإيدك نهائياً**.
+لو أنت شغال على ويندوز، **مش محتاج تسطب أو تظبط أي حاجة بإيدك نهائياً**:
 
 1. **حمّل المشروع** من خلال Clone أو Download ZIP:
    ```bash
@@ -148,13 +151,14 @@ X-IDS-Project/
    * ✅ **فحص بايثون:** لو بايثون مش متسطب على جهازك، هيحمله ويسطبه أوتوماتيك ويفعل الـ PATH.
    * ✅ **إنشاء البيئة الافتراضية:** بينشئ ويفعل مجلد معزول `.venv` عشان ما يلخبطش مكتبات جهازك.
    * ✅ **تسطيب المكتبات:** بيثبت كل مكتبات الذكاء الاصطناعي المطلوبة (`pandas`, `numpy`, `scikit-learn`, `xgboost`, `shap`, `ipykernel`).
+   * ✅ **التحقق الذكي من الداتاسيت:** بيفحص ملف `wednesday.csv`. لو مش موجود، بيسألك لو حابب يحمله أوتوماتيك من الرابط الرسمي للجامعة ويفك ضغطه في فولدر `Dataset` مباشرة.
    * ✅ **تثبيت إضافات VS Code:** بيثبت إضافات بايثون وجوبيتر الرسمية لبرنامج VS Code بشكل صامت.
    * ✅ **ربط الكيرنل تلقائياً:** بيحدد كيرنل `Python (X-IDS Machine Learning)` مسبقاً للنوت بوك.
    * ✅ **الفتح والجاهزية:** بيفتح برنامج VS Code مباشرة على النوت بوك `my_model_training.ipynb` جاهز للكتابة والتشغيل فوراً!
 
 ---
 
-## 📌 نبذة عامة عن المشروع
+### 📌 نبذة عامة عن المشروع
 
 مشروع **X-IDS (Explainable Intrusion Detection System)** يهدف لسد الفجوة بين نماذج الذكاء الاصطناعي عالية الدقة وبين مهندسي ومحللي الأمن السيبراني في مراكز العمليات الأمنية (SOC).
 
@@ -165,7 +169,7 @@ X-IDS-Project/
 
 ---
 
-## 🎙️ المساعد التعليمي الصوتي التفاعلي ("فِلحو - Fel7o")
+### 🎙️ المساعد التعليمي الصوتي التفاعلي ("فِلحو - Fel7o")
 
 لضمان فهم كل عضو في الفريق واللجان الأكاديمية لكل خطوة برمجية:
 * **تسجيلات صوتية مدمجة:** في كل خطوة عملية من خطوات النوت بوك، يوجد مشغل صوتي يشرح بالعامية المصرية فلسفة الخطوة والهدف الهندسي منها.
@@ -174,7 +178,7 @@ X-IDS-Project/
 
 ---
 
-## 🛡️ المعايير الأمنية المطبقة في هندسة البيانات
+### 🛡️ المعايير الأمنية المطبقة في هندسة البيانات
 
 1. **منع تسريب البيانات (Data Leakage Prevention):**
    * تم حذف أعمدة السوكت والمعرفات الزمنية: `Flow ID` و `Source IP` و `Destination IP` و `Source Port` و `Timestamp`.
@@ -186,13 +190,13 @@ X-IDS-Project/
 
 ---
 
-## 📄 حقوق العمل والإسناد الأكاديمي
+### 📄 حقوق العمل والإسناد الأكاديمي
 تم إعداد وتطوير هذا المشروع كمشروع تخرج أكاديمي في تخصص **الذكاء الاصطناعي والأمن السيبراني**.  
 مرجعية الداتاسيت: *Canadian Institute for Cybersecurity (CIC)* وأبحاث الورقة المرجعية *CIC-IDS2017 Improved (Engelen et al., 2021)*.
 
 <div align="center">
 
-[⬆️ العودة للنسخة الإنجليزية (Back to Top)](#-english-version)
+[⬆️ العودة للأعلى (Back to Top)](#english)
 
 </div>
 
