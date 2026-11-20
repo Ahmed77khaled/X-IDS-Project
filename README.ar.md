@@ -1,19 +1,7 @@
 <div align="center">
-  <br />
-  <a href="README.md">
-    <img src="https://img.shields.io/badge/English-1f6feb?style=for-the-badge&logo=github&logoColor=white&label=%F0%9F%87%BA%F0%9F%87%B8%20Language" alt="English Version" />
-  </a>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="README.ar.md">
-    <img src="https://img.shields.io/badge/%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-238636?style=for-the-badge&logoColor=white&label=%F0%9F%87%AA%F0%9F%87%AC%20%D8%A7%D9%84%D9%84%D8%BA%D8%A9" alt="النسخة العربية" />
-  </a>
-  <br /><br />
-  <sub>
-    🌐 <b>اختر لغة القراءة / Choose Language:</b> 
-    <a href="README.ar.md"><b>العربية 🇪🇬</b></a> &bull; 
-    <a href="README.md"><b>English 🇺🇸</b></a>
-  </sub>
-  <br />
+
+## 🌐 Languages / اللغات: &nbsp; [English 🇺🇸](README.md) &nbsp;&bull;&nbsp; [العربية 🇪🇬](README.ar.md)
+
 </div>
 
 ---
