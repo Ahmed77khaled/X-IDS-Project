@@ -1,10 +1,12 @@
 <div align="center">
 
-## 🌐 Languages / اللغات: &nbsp; [English 🇺🇸](README.md) &nbsp;&bull;&nbsp; [العربية 🇪🇬](README.ar.md)
+# 🌐 &nbsp; [English 🇺🇸](#-english-version) &nbsp;&nbsp;|&nbsp;&nbsp; [العربية 🇪🇬](#-النسخة-العربية)
+
+---
 
 </div>
 
----
+<a id="english-version"></a>
 
 # 🛡️ X-IDS: Explainable AI Network Intrusion Detection System
 > **An End-to-End Explainable Machine Learning Pipeline for Network Intrusion Detection & Security Analytics**  
@@ -64,8 +66,7 @@ X-IDS-Project/
 ├── setup.bat                      # Standard environment setup alias
 ├── my_model_training.ipynb        # Primary interactive guided notebook (Tasks 1-9)
 ├── requirements.txt               # Pinned dependencies for Python
-├── README.md                      # English documentation & overview
-├── README.ar.md                   # Arabic documentation & RTL guide
+├── README.md                      # Unified documentation (English + Arabic RTL)
 ├── .gitignore                     # Optimized exclusion rules (dataset & secrets protected)
 │
 ├── audio/                         # Curated voiceover narration (Fel7o Persona)
@@ -110,6 +111,89 @@ X-IDS-Project/
 
 ---
 
-## 📄 License & Academic Attribution
-Developed as an **Academic Graduation Project in Artificial Intelligence & Cybersecurity**.  
-Dataset attribution: *Canadian Institute for Cybersecurity (CIC)* & the *CIC-IDS2017 Improved* benchmark (Engelen et al.).
+<br />
+<br />
+
+---
+
+<a id="النسخة-العربية"></a>
+
+<div dir="rtl" align="right">
+
+# 🛡️ النسخة العربية: مشروع X-IDS لكشف اختراقات الشبكة بالذكاء الاصطناعي وتفسير القرارات
+> **منظومة متكاملة لكشف التسلل السيبراني وتفسير قرارات نماذج التعلم الآلي لمهندسي مراكز العمليات الأمنية (SOC)**  
+> *مشروع تخرج أكاديمي — مبني على داتاسيت CIC-IDS2017 Improved*
+
+<div align="center">
+
+[⬆️ العودة للنسخة الإنجليزية (Back to Top)](#-english-version)
+
+</div>
+
+---
+
+## ⚡ التشغيل الفوري بنقرة واحدة (بدون أي إعدادات يدوية)
+
+لو أنت شغال على ويندوز، **مش محتاج تسطب أو تظبط أي حاجة بإيدك نهائياً**.
+
+1. **حمّل المشروع** من خلال Clone أو Download ZIP:
+   ```bash
+   git clone https://github.com/Ahmed77khaled/X-IDS-Project.git
+   ```
+2. **اضغط دبل كليك** على ملف التشغيل في المجلد الرئيسي:
+   ```text
+   👉 START_PROJECT.bat
+   ```
+3. **السكريبت هيعمل الآتي تلقائياً بالكامل:**
+   * ✅ **فحص بايثون:** لو بايثون مش متسطب على جهازك، هيحمله ويسطبه أوتوماتيك ويفعل الـ PATH.
+   * ✅ **إنشاء البيئة الافتراضية:** بينشئ ويفعل مجلد معزول `.venv` عشان ما يلخبطش مكتبات جهازك.
+   * ✅ **تسطيب المكتبات:** بيثبت كل مكتبات الذكاء الاصطناعي المطلوبة (`pandas`, `numpy`, `scikit-learn`, `xgboost`, `shap`, `ipykernel`).
+   * ✅ **تثبيت إضافات VS Code:** بيثبت إضافات بايثون وجوبيتر الرسمية لبرنامج VS Code بشكل صامت.
+   * ✅ **ربط الكيرنل تلقائياً:** بيحدد كيرنل `Python (X-IDS Machine Learning)` مسبقاً للنوت بوك.
+   * ✅ **الفتح والجاهزية:** بيفتح برنامج VS Code مباشرة على النوت بوك `my_model_training.ipynb` جاهز للكتابة والتشغيل فوراً!
+
+---
+
+## 📌 نبذة عامة عن المشروع
+
+مشروع **X-IDS (Explainable Intrusion Detection System)** يهدف لسد الفجوة بين نماذج الذكاء الاصطناعي عالية الدقة وبين مهندسي ومحللي الأمن السيبراني في مراكز العمليات الأمنية (SOC).
+
+أغلب أنظمة الذكاء الاصطناعي الحالية تُعتبر "صناديق سوداء" (Black-Box)، تعطي إنذارات دون توضيح سبب الإنذار، مما يؤدي لتجاهلها لكثرة الإنذارات الكاذبة. يقدم مشروعنا حلاً حقيقياً عبر ثلاث ركائز:
+1. **دقة كشف عالية (High Detection Rate):** باستخدام خوارزميات أشجار القرار المعززة (`XGBoost` و `Random Forest`) المدربة على خصائص تدفقات الشبكة.
+2. **تفسيرية القرارات بالذكاء الاصطناعي (Explainable AI - XAI):** باستخدام مكتبات `SHAP` و `LIME` لتوضيح أسباب تصنيف كل حزمة أو جلسة اتصال كـ هجوم (مثل هجمات الحرمان من الخدمة DoS، أو فحص المنافذ PortScan، أو التسلل Infiltration).
+3. **تطهير البيانات ومقاومة التسريب (Leakage-Resilient):** تم تنظيف البيانات وفق أحدث المعايير البحثية المحكمة لداتاسيت `CIC-IDS2017 Improved`، مع استبعاد المعرفات الخادعة.
+
+---
+
+## 🎙️ المساعد التعليمي الصوتي التفاعلي ("فِلحو - Fel7o")
+
+لضمان فهم كل عضو في الفريق واللجان الأكاديمية لكل خطوة برمجية:
+* **تسجيلات صوتية مدمجة:** في كل خطوة عملية من خطوات النوت بوك، يوجد مشغل صوتي يشرح بالعامية المصرية فلسفة الخطوة والهدف الهندسي منها.
+* **تفريغ نصي متزامن:** صندوق قراءة كامل أسفل كل صوت لمتابعة الشرح كلمة بكلمة.
+* **قوالب الأكواد والتنبيهات:** إرشادات عملية لكتابة الكود والتحذير من الأخطاء الشائعة قبل الوقوع فيها.
+
+---
+
+## 🛡️ المعايير الأمنية المطبقة في هندسة البيانات
+
+1. **منع تسريب البيانات (Data Leakage Prevention):**
+   * تم حذف أعمدة السوكت والمعرفات الزمنية: `Flow ID` و `Source IP` و `Destination IP` و `Source Port` و `Timestamp`.
+   * لو تُركت هذه الأعمدة، سيقوم النموذج بحفظ عناوين أجهزة معمل الاختبار بدلاً من فهم الأنماط السلوكية للهجوم، ويفشل تماماً عند تشغيله في شبكة واقعية.
+2. **إعادة تصنيف محاولات الهجوم (Attempted Attacks):**
+   * تم إعادة تصنيف الحالات الموسومة بـ `Attempted` إلى فئة `BENIGN`، لأنها محاولات فاشلة لم تخترق الشبكة، وذلك التزاماً بالمنهجية العلمية لأبحاث داتاسيت `CIC-IDS2017 Improved`.
+3. **التعويض الإحصائي المتين بالوسيط (Median Imputation):**
+   * تم استخدام الوسيط الحسابي (`Median`) بدلاً من المتوسط (`Mean`) لتعويض الخانات المفقودة، لأن بيانات حركة الشبكات تتضمن قيماً شاذة وانفجارات لحظية ضخمة ناتجة عن هجمات DoS، تجعل المتوسط مشوهاً وغير واقعي.
+
+---
+
+## 📄 حقوق العمل والإسناد الأكاديمي
+تم إعداد وتطوير هذا المشروع كمشروع تخرج أكاديمي في تخصص **الذكاء الاصطناعي والأمن السيبراني**.  
+مرجعية الداتاسيت: *Canadian Institute for Cybersecurity (CIC)* وأبحاث الورقة المرجعية *CIC-IDS2017 Improved (Engelen et al., 2021)*.
+
+<div align="center">
+
+[⬆️ العودة للنسخة الإنجليزية (Back to Top)](#-english-version)
+
+</div>
+
+</div>
