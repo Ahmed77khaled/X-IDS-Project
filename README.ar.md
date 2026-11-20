@@ -1,3 +1,23 @@
+<div align="center">
+  <br />
+  <a href="README.md">
+    <img src="https://img.shields.io/badge/English-1f6feb?style=for-the-badge&logo=github&logoColor=white&label=%F0%9F%87%BA%F0%9F%87%B8%20Language" alt="English Version" />
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="README.ar.md">
+    <img src="https://img.shields.io/badge/%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-238636?style=for-the-badge&logoColor=white&label=%F0%9F%87%AA%F0%9F%87%AC%20%D8%A7%D9%84%D9%84%D8%BA%D8%A9" alt="النسخة العربية" />
+  </a>
+  <br /><br />
+  <sub>
+    🌐 <b>اختر لغة القراءة / Choose Language:</b> 
+    <a href="README.ar.md"><b>العربية 🇪🇬</b></a> &bull; 
+    <a href="README.md"><b>English 🇺🇸</b></a>
+  </sub>
+  <br />
+</div>
+
+---
+
 <div dir="rtl" align="right">
 
 # 🛡️ مشروع X-IDS: كشف اختراقات الشبكة بالذكاء الاصطناعي وتفسير القرارات
@@ -6,13 +26,7 @@
 
 ---
 
-<!-- Language Switcher & Badges -->
-<p align="center">
-  <a href="README.md">
-    <img src="https://img.shields.io/badge/🌐_Language-English_Documentation-blue?style=for-the-badge" alt="English Documentation" />
-  </a>
-</p>
-
+<!-- Badges -->
 <p align="center">
   <img src="https://img.shields.io/badge/لغة_البرمجة-Python_3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="بايثون" />
   <img src="https://img.shields.io/badge/بيئة_العمل-Jupyter_Notebook-F37626?style=for-the-badge&logo=jupyter&logoColor=white" alt="جوبيتر" />

@@ -1,16 +1,30 @@
+<div align="center">
+  <br />
+  <a href="README.md">
+    <img src="https://img.shields.io/badge/English-1f6feb?style=for-the-badge&logo=github&logoColor=white&label=%F0%9F%87%BA%F0%9F%87%B8%20Language" alt="English Version" />
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="README.ar.md">
+    <img src="https://img.shields.io/badge/%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-238636?style=for-the-badge&logoColor=white&label=%F0%9F%87%AA%F0%9F%87%AC%20%D8%A7%D9%84%D9%84%D8%BA%D8%A9" alt="النسخة العربية" />
+  </a>
+  <br /><br />
+  <sub>
+    🌐 <b>Choose Language / اختر لغة القراءة:</b> 
+    <a href="README.md"><b>English 🇺🇸</b></a> &bull; 
+    <a href="README.ar.md"><b>العربية 🇪🇬</b></a>
+  </sub>
+  <br />
+</div>
+
+---
+
 # 🛡️ X-IDS: Explainable AI Network Intrusion Detection System
 > **An End-to-End Explainable Machine Learning Pipeline for Network Intrusion Detection & Security Analytics**  
 > *Academic Graduation Project — Based on the CIC-IDS2017 Improved Benchmark Dataset*
 
 ---
 
-<!-- Language Switcher & Badges -->
-<p align="center">
-  <a href="README.ar.md">
-    <img src="https://img.shields.io/badge/🌐_Language-اقرأ_بالعربية_(Arabic)-0078D6?style=for-the-badge" alt="Read in Arabic" />
-  </a>
-</p>
-
+<!-- Badges -->
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python Version" />
   <img src="https://img.shields.io/badge/Jupyter-Notebook-F37626?style=for-the-badge&logo=jupyter&logoColor=white" alt="Jupyter Notebook" />
