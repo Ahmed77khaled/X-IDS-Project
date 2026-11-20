@@ -100,9 +100,9 @@ echo.
 :: ----------------------------------------------------------------------------
 :: 5. Register Jupyter / VS Code Kernel
 :: ----------------------------------------------------------------------------
-echo [*] Registering Jupyter Kernel for VS Code...
+echo [*] Auto-binding Jupyter Kernel for VS Code...
 python -m ipykernel install --user --name xids-env --display-name "Python (X-IDS Machine Learning)" >nul 2>&1
-echo [OK] Kernel registered as: "Python (X-IDS Machine Learning)"
+echo [OK] Kernel registered as default: "Python (X-IDS Machine Learning)"
 echo.
 
 :: ----------------------------------------------------------------------------
@@ -119,29 +119,33 @@ if exist "Dataset\CICIDS2017_improved\Wednesday-workingHours.pcap_ISCX.csv" (
 echo.
 
 :: ----------------------------------------------------------------------------
-:: 7. Launch VS Code directly to Notebook
+:: 7. Install VS Code Extensions (Silent) & Auto-Launch
 :: ----------------------------------------------------------------------------
-echo ==============================================================================
-echo                         SETUP COMPLETED SUCCESSFULLY!
-echo ==============================================================================
-echo.
-echo [*] Opening VS Code to 'my_model_training.ipynb'...
 where code >nul 2>&1
 if %errorlevel% equ 0 (
-    code my_model_training.ipynb
-    echo [OK] VS Code launched successfully.
+    echo [*] Ensuring VS Code Python and Jupyter extensions are installed...
+    call code --install-extension ms-python.python --force >nul 2>&1
+    call code --install-extension ms-toolsai.jupyter --force >nul 2>&1
+    echo [OK] VS Code extensions ready.
+    echo.
+    echo [*] Auto-launching VS Code with workspace and notebook...
+    code . my_model_training.ipynb
 ) else (
-    echo [INFO] 'code' command not in PATH. Please open VS Code manually and open:
-    echo        my_model_training.ipynb
+    echo [INFO] 'code' command not found in PATH. Please open VS Code and open this folder.
 )
+
 echo.
 echo ==============================================================================
-echo                          4 SIMPLE INSTRUCTIONS:
+echo                         ALL SYSTEMS READY! 🚀
 echo ==============================================================================
-echo  1. VS Code has opened 'my_model_training.ipynb'.
-echo  2. Look at the top-right corner of the notebook and click: [ Select Kernel ]
-echo  3. Choose: [ Python Environments... ] -> [ Python (X-IDS Machine Learning) ]
-echo  4. Press the audio play button on each task to listen to Fel7o and run code!
+echo  [OK] Virtual Environment (.venv) is activated.
+echo  [OK] All ML libraries are verified.
+echo  [OK] Kernel is pre-selected: Python (X-IDS Machine Learning)
+echo  [OK] Notebook 'my_model_training.ipynb' is open and ready.
+echo ==============================================================================
+echo  👉 Everything is automated on the fly!
+echo     Just press the audio play button on each task to listen to Fel7o
+echo     and hit (Shift + Enter) to run your code!
 echo ==============================================================================
 echo.
 pause

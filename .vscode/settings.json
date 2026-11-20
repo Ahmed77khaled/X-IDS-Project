@@ -1,5 +1,5 @@
 {
-  "python.defaultInterpreterPath": "C:\\Users\\msi\\AppData\\Local\\Programs\\Python\\Python38\\python.exe",
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
   "jupyter.notebookFileRoot": "${workspaceFolder}",
   "jupyter.askForKernelRestart": false,
   "notebook.lineNumbers": "on",
