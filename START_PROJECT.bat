@@ -136,12 +136,12 @@ if %errorlevel% equ 0 (
 )
 echo.
 echo ==============================================================================
-echo                         4 SIMPLE INSTRUCTIONS:
+echo                          4 SIMPLE INSTRUCTIONS:
 echo ==============================================================================
 echo  1. VS Code has opened 'my_model_training.ipynb'.
 echo  2. Look at the top-right corner of the notebook and click: [ Select Kernel ]
 echo  3. Choose: [ Python Environments... ] -> [ Python (X-IDS Machine Learning) ]
-echo  4. Press the audio play button on each task to listen to Felho and run code!
+echo  4. Press the audio play button on each task to listen to Fel7o and run code!
 echo ==============================================================================
 echo.
 pause
