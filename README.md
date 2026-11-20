@@ -121,7 +121,7 @@ X-IDS-Project/
 
 <div dir="rtl" align="right">
 
-## 🇪🇬 الشرح باللغة العربية (RTL)
+## 🇪🇬 الشرح باللغة العربية 
 
 <div align="center">
 
