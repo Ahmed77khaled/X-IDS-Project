@@ -1,0 +1,14 @@
+{
+  "python.defaultInterpreterPath": "C:\\Users\\msi\\AppData\\Local\\Programs\\Python\\Python38\\python.exe",
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+  "jupyter.askForKernelRestart": false,
+  "notebook.lineNumbers": "on",
+  "notebook.output.textLineLimit": 100,
+  "notebook.formatOnSave.enabled": true,
+  "editor.suggestSelection": "first",
+  "editor.tabCompletion": "on",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000
+}

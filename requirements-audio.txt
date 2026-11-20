@@ -1,0 +1,5 @@
+# Voiceover generation dependencies (project maintainer only)
+# Team members do NOT need to install this; audio files are pre-rendered in audio/
+edge-tts>=7.0.0
+elevenlabs>=1.0.0
+python-dotenv>=1.0.0

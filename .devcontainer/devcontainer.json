@@ -1,0 +1,24 @@
+{
+  "name": "X-IDS Machine Learning Environment",
+  "image": "mcr.microsoft.com/devcontainers/python:3.10-bookworm",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.languageServer": "Pylance",
+        "jupyter.askForKernelRestart": false,
+        "notebook.lineNumbers": "on"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.vscode-jupyter-cell-tags",
+        "ms-toolsai.jupyter-keymap",
+        "ms-toolsai.jupyter-renderers"
+      ]
+    }
+  },
+  "postCreateCommand": "python -m pip install --upgrade pip && pip install -r requirements.txt && python -m ipykernel install --user --name xids-env --display-name 'Python (X-IDS Machine Learning)'",
+  "remoteUser": "vscode"
+}

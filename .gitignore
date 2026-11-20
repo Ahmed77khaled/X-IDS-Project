@@ -1,0 +1,76 @@
+# ==============================================================================
+# X-IDS Project .gitignore
+# ==============================================================================
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Large Datasets & Compressed Archives (Do NOT commit large data to git)
+# Team members should run 'python download_data.py' to verify / download datasets.
+data/raw/
+data/processed/
+*.csv
+*.parquet
+*.tsv
+*.zip
+*.tar.gz
+*.7z
+*.rar
+Dataset/CICIDS2017_improved/*.csv
+Dataset/*.zip
+
+# Machine Learning Models & Heavy Artifacts
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/*.pt
+*.pkl
+*.joblib
+
+# Operating System & IDE Artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+*.swp
+*~
+
+# ==============================================================================
+# EXPLICIT INCLUSIONS (Whitelisted Files)
+# IMPORTANT: Audio files and scripts MUST be tracked in git for team members!
+# ==============================================================================
+!audio/*.mp3
+!audio/samples/*.mp3
+!audio/scripts/*.txt
+!audio/pronunciation.json
+!audio/generate_audio.py
+!audio/elevenlabs_generator.py
+!audio/samples/voice_showcase.html
+!audio/samples/VOICE_SCRIPTS.md
+
+# Small synthetic dataset sample for offline quick tests (only ~40 KB)
+!data/cic_ids2017_sample.csv
+# Local secrets written by `elevenlabs onboard`
+/.env
+
+# Temporary intermediate audio files
+audio steps/
+*.bak
+*.backup*
+*.tmp
+.env
+*.env

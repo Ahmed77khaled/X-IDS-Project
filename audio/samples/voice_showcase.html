@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استوديو مقارنة الأصوات الذكية | مشروع كشف التسلل X-IDS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #090d16;
+            --bg-surface: #101728;
+            --bg-card: #141e33;
+            --bg-card-hover: #192642;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(56, 189, 248, 0.4);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --accent-cyan: #38bdf8;
+            --accent-emerald: #10b981;
+            --accent-purple: #a855f7;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', Consolas, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2.5rem 1rem 4rem;
+            background-image: 
+                radial-gradient(ellipse at 50% -20%, rgba(56, 189, 248, 0.15), transparent 70%),
+                radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.08), transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .badge-hero {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 1.25rem;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* Insight Callout */
+        .callout-box {
+            background: rgba(16, 23, 40, 0.75);
+            border: 1px solid var(--border-subtle);
+            border-right: 4px solid var(--accent-cyan);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .callout-icon {
+            font-size: 1.6rem;
+            line-height: 1;
+        }
+
+        .callout-text h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+
+        .callout-text p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .sample-script-quote {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            color: #38bdf8;
+            font-size: 0.88rem;
+            margin-top: 0.4rem;
+            border: 1px dashed rgba(56, 189, 248, 0.3);
+        }
+
+        /* Voice Cards Grid */
+        .voice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .voice-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .voice-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: transparent;
+            transition: background 0.3s ease;
+        }
+
+        .voice-card:hover {
+            transform: translateY(-3px);
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .voice-card.active-playing {
+            border-color: var(--border-active);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
+        }
+
+        .voice-card[data-voice="salma"]::before { background: var(--accent-emerald); }
+        .voice-card[data-voice="shakir"]::before { background: var(--accent-cyan); }
+        .voice-card[data-voice="hamed"]::before { background: var(--accent-purple); }
+        .voice-card[data-voice="zariyah"]::before { background: var(--accent-amber); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .voice-title-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .voice-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .voice-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .voice-meta {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+            direction: ltr;
+            text-align: right;
+        }
+
+        .voice-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        .badge-salma { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-shakir { background: rgba(56, 189, 248, 0.15); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .badge-hamed { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .badge-zariyah { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+        .card-body {
+            margin-bottom: 1.25rem;
+            flex-grow: 1;
+        }
+
+        .trait-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .trait-item {
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        .trait-item strong {
+            color: #e2e8f0;
+        }
+
+        .best-for {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 0.75rem;
+        }
+
+        .best-for span {
+            color: var(--text-dim);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.15rem;
+            font-size: 0.75rem;
+        }
+
+        /* Script details toggle */
+        details.script-details {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        details.script-details summary {
+            cursor: pointer;
+            color: var(--text-dim);
+            font-weight: 600;
+            outline: none;
+            user-select: none;
+        }
+
+        details.script-details summary:hover {
+            color: var(--text-main);
+        }
+
+        details.script-details p {
+            margin-top: 0.5rem;
+            color: #cbd5e1;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            border-top: 1px dashed rgba(255, 255, 255, 0.08);
+            padding-top: 0.4rem;
+        }
+
+        /* Audio Player Styling */
+        .player-box {
+            background: rgba(9, 13, 22, 0.75);
+            border-radius: 12px;
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        audio {
+            width: 100%;
+            height: 40px;
+            outline: none;
+            border-radius: 8px;
+        }
+
+        .player-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .now-playing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        .voice-card.active-playing .now-playing-indicator {
+            display: flex;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-cyan);
+            animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(56, 189, 248, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        }
+
+        /* Comparison Table Section */
+        .matrix-section {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-dim);
+            font-weight: 700;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.82rem;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+        }
+
+        .td-name {
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ElevenLabs Pro Section */
+        .elevenlabs-card {
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.55) 0%, rgba(15, 23, 42, 0.85) 100%);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px -10px rgba(168, 85, 247, 0.2);
+        }
+
+        .elevenlabs-card::after {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .code-box {
+            background: #060911;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            direction: ltr;
+            text-align: left;
+            color: #38bdf8;
+            margin-top: 1.25rem;
+            overflow-x: auto;
+        }
+
+        .code-comment {
+            color: #64748b;
+        }
+
+        .btn-copy {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            float: right;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            background: var(--accent-cyan);
+            color: #000;
+        }
+
+        /* Quick Recommendation Banner */
+        .verdict-banner {
+            margin-bottom: 2.5rem;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .verdict-text h4 {
+            color: #34d399;
+            font-size: 1.05rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .verdict-text p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 3.5rem;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 1.75rem; }
+            .voice-grid { grid-template-columns: 1fr; }
+            .matrix-section { padding: 1.25rem; }
+            .elevenlabs-card { padding: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Hero Header -->
+    <header>
+        <div class="badge-hero">
+            <span>✨</span>
+            <span>استوديو التدقيق والمقارنة الصوتية للذكاء الاصطناعي</span>
+        </div>
+        <h1>مقارنة واختيار الصوت الأمثل لمشروع X-IDS</h1>
+        <p class="subtitle">
+            استمع مباشرة وقارن بين 4 أصوات مختلفة لتحديد الأنسب لمناقشة التخرج وشرح خطوات الكود، بعد الضبط الصوتي الكامل للمصطلحات البرمجية.
+        </p>
+    </header>
+
+    <!-- Why earlier audio had stutter explanation -->
+    <div class="callout-box">
+        <div class="callout-icon">💡</div>
+        <div class="callout-text">
+            <h3>سر علاج التقطيع الصوتي (Phonetic Smoothing Applied):</h3>
+            <p>
+                التقطيع في الصوت السابق كان بسبب الحروف الإنجليزية اللاتينية (مثل pandas, numpy, df.shape) وسط الجملة العربية، مما كان يُجبر المحرك الصوتي على التردد واللكتة.
+                في هذه العينات الجديدة تم تعريب كافة المصطلحات صوتياً بالكامل مثل:
+                <br>
+                <span class="sample-script-quote">
+                    "مكتبة بانداس (بي دي) للجداول والداتا فريم، مكتبة نمباي (إن بي) للعمليات الرياضية، ومكتبة مات بلوت ليب (بي إل تي)..."
+                </span>
+                مما جعل القراءة متصلة وطبيعية 100% بدون أي توقفات مفاجئة.
+            </p>
+        </div>
+    </div>
+
+    <!-- 4 Voice Comparison Cards -->
+    <div class="voice-grid">
+
+        <!-- Voice 1: Salma (Egyptian Female) -->
+        <div class="voice-card" data-voice="salma">
+            <div>
+                <div class="card-header">
+                    <div class="voice-title-group">
+                        <div class="voice-avatar">👩🏻‍💼</div>
+                        <div>
+                            <div class="voice-name">سلمى (Salma)</div>
+                            <div class="voice-meta">ar-EG-SalmaNeural</div>
+                        </div>
+                    </div>
+                    <span class="voice-badge badge-salma">⭐ الأكثر طبيعية وسلاسة</span>
+                </div>
+
+                <div class="card-body">
+                    <ul class="trait-list">
+                        <li class="trait-item">
+                            <span>🗣️</span>
+                            <span><strong>اللهجة:</strong> عامية مصرية بيضاء محبوبة وطبيعية</span>
+                        </li>
+                        <li class="trait-item">
+                            <span>🎙️</span>
+                            <span><strong>النبرة:</strong> حوارية دافئة تشبه الشرح الزميلي المباشر</span>
+                        </li>
+                        <li class="trait-item">
+                            <span>⚡</span>
+                            <span><strong>التدفق:</strong> نطق انسيابي ممتاز للمصطلحات التقنية</span>
+                        </li>
+                    </ul>
+                    <div class="best-for">
+                        <span>الاستخدام الأمثل:</span>
+                        الشرح التفاعلي السلس داخل النوتبوك للمذاكرة والمتابعة خطوة بخطوة بدون ملل.
+                    </div>
+
+                    <details class="script-details">
+                        <summary>📜 عرض النص المنطوق في العينة</summary>
+                        <p>
+                            "أهلاً بيك. في الخطوة الأولى من المشروع، بنجهز بيئة العمل ونستدعي التلات مكتبات الأساسية اللي هنعتمد عليهم في معالجة البيانات وبناء النموذج.
+                            أول مكتبة هي مكتبة بانداس، بالاسم المختصر بي دي... تاني مكتبة هي مكتبة نمباي، بالاسم المختصر إن بي... تالت مكتبة هي مكتبة مات بلوت ليب دوت باي بلوت، بالاسم المختصر بي إل تي..."
+                        </p>
+                    </details>
+                </div>
+            </div>
+
+            <div class="player-box">
+                <audio controls preload="metadata">
+                    <source src="sample_eg_salma.mp3" type="audio/mpeg">
+                    متصفحك لا يدعم تشغيل ملفات الصوت.
+                </audio>
+                <div class="player-footer">
+                    <span class="now-playing-indicator">
+                        <span class="pulse-dot"></span>
+                        جارٍ الاستماع الآن...
+                    </span>
+                    <span>عينة الخطوة 1 (418 ك.ب)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice 2: Shakir Tuned (Egyptian Male) -->
+        <div class="voice-card" data-voice="shakir">
+            <div>
+                <div class="card-header">
+                    <div class="voice-title-group">
+                        <div class="voice-avatar">👨🏻‍💻</div>
+                        <div>
+                            <div class="voice-name">شاكر بعد الضبط (Shakir)</div>
+                            <div class="voice-meta">ar-EG-ShakirNeural</div>
+                        </div>
+                    </div>
+                    <span class="voice-badge badge-shakir">🔧 تم علاج التقطيع</span>
+                </div>
+
+                <div class="card-body">
+                    <ul class="trait-list">
+                        <li class="trait-item">
+                            <span>🗣️</span>
+                            <span><strong>اللهجة:</strong> مصرية تقنية مباشرة</span>
+                        </li>
+                        <li class="trait-item">
+                            <span>🎙️</span>
+                            <span><strong>النبرة:</strong> مهندس برمجيات يشرح كود عملي بتركيز</span>
+                        </li>
+                        <li class="trait-item">
+                            <span>🛠️</span>
+                            <span><strong>التحسين:</strong> تم إزالة الحروف اللاتينية وإصلاح النطق بالكامل</span>
+                        </li>
+                    </ul>
+                    <div class="best-for">
+                        <span>الاستخدام الأمثل:</span>
+                        إذا كنت تفضل صوتاً رجالياً مصرياً مع الحفاظ على روح المبرمج والشرح التقني العملي.
+                    </div>
+
+                    <details class="script-details">
+                        <summary>📜 عرض النص المنطوق في العينة</summary>
+                        <p>
+                            "أهلاً بيك. في الخطوة الأولى من المشروع، بنجهز بيئة العمل ونستدعي التلات مكتبات الأساسية... في الكود، بنكتب أمر إمبورت لكل مكتبة، وبعدها أمر الطباعة برنت عشان نتأكد إن الاستدعاء تم بنجاح. دلوقتي دورك: اكتب كود الاستدعاء واضغط شيفت مع إنتر..."
+                        </p>
+                    </details>
+                </div>
+            </div>
+
+            <div class="player-box">
+                <audio controls preload="metadata">
+                    <source src="sample_eg_shakir_tuned.mp3" type="audio/mpeg">
+                    متصفحك لا يدعم تشغيل ملفات الصوت.
+                </audio>
+                <div class="player-footer">
+                    <span class="now-playing-indicator">
+                        <span class="pulse-dot"></span>
+                        جارٍ الاستماع الآن...
+                    </span>
+                    <span>عينة الخطوة 1 (351 ك.ب)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice 3: Hamed (MSA Male Academic) -->
+        <div class="voice-card" data-voice="hamed">
+            <div>
+                <div class="card-header">
+                    <div class="voice-title-group">
+                        <div class="voice-avatar">🎓</div>
+                        <div>
+                            <div class="voice-name">حامد (Hamed)</div>
+                            <div class="voice-meta">ar-SA-HamedNeural</div>
+                        </div>
+                    </div>
+                    <span class="voice-badge badge-hamed">🏛️ الأنسب لمناقشات التخرج</span>
+                </div>
+
+                <div class="card-body">
+                    <ul class="trait-list">
+                        <li class="trait-item">
+                            <span>🗣️</span>
+                            <span><strong>اللهجة:</strong> فصحى حديثة معاصرة (MSA)</span>
+                        </li>
+                        <li class="trait-item">
+                            <span>🎙️</span>
+                            <span><strong>النبرة:</strong> وثائقية أكاديمية فخمة ورصينة وواثقة</span>
+                        </li>
+                        <li class="trait-item">
+                            <span>🎯</span>
+                            <span><strong>الوضوح:</strong> مخارج حروف دقيقة ومناسبة للجان التحكيم</span>
+                        </li>
+                    </ul>
+                    <div class="best-for">
+                        <span>الاستخدام الأمثل:</span>
+                        العرض الرسمي أمام الدكاترة ولجنة مناقشة التخرج، والفيديوهات التوثيقية الرسمية للمشروع.
+                    </div>
+
+                    <details class="script-details">
+                        <summary>📜 عرض النص المنطوق في العينة</summary>
+                        <p>
+                            "مرحباً بكم. في الخطوة الأولى من المشروع، نبدأ بتجهيز بيئة العمل واستدعاء المكتبات البرمجية الأساسية التي سنعتمد عليها في معالجة البيانات وبناء النموذج الذكي... المكتبة الأولى هي مكتبة بانداس، بالاسم المختصر بي دي... والآن جاء دورك: اكتب كود الاستدعاء ثم اضغط شيفت مع إنتر..."
+                        </p>
+                    </details>
+                </div>
+            </div>
+
+            <div class="player-box">
+                <audio controls preload="metadata">
+                    <source src="sample_fusha_hamed.mp3" type="audio/mpeg">
+                    متصفحك لا يدعم تشغيل ملفات الصوت.
+                </audio>
+                <div class="player-footer">
+                    <span class="now-playing-indicator">
+                        <span class="pulse-dot"></span>
+                        جارٍ الاستماع الآن...
+                    </span>
+                    <span>عينة الخطوة 1 (407 ك.ب)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice 4: Zariyah (MSA Female Educational) -->
+        <div class="voice-card" data-voice="zariyah">
+            <div>
+                <div class="card-header">
+                    <div class="voice-title-group">
+                        <div class="voice-avatar">👩🏻‍🏫</div>
+                        <div>
+                            <div class="voice-name">زارية (Zariyah)</div>
+                            <div class="voice-meta">ar-SA-ZariyahNeural</div>
+                        </div>
+                    </div>
+                    <span class="voice-badge badge-zariyah">📖 نبرة تدريبية رصينة</span>
+                </div>
+
+                <div class="card-body">
+                    <ul class="trait-list">
+                        <li class="trait-item">
+                            <span>🗣️</span>
+                            <span><strong>اللهجة:</strong> فصحى تعليمية نقية</span>
+                        </li>
+                        <li class="trait-item">
+                            <span>🎙️</span>
+                            <span><strong>النبرة:</strong> مدربة محترفة ومخارج حروف واضحة جداً</span>
+                        </li>
+                        <li class="trait-item">
+                            <span>📚</span>
+                            <span><strong>الأسلوب:</strong> شرح تدريسي متأني ومرتب</span>
+                        </li>
+                    </ul>
+                    <div class="best-for">
+                        <span>الاستخدام الأمثل:</span>
+                        المحتوى التعليمي المسجل وتدريب الطلاب على خطوات ومراحل المشروع بالتفصيل.
+                    </div>
+
+                    <details class="script-details">
+                        <summary>📜 عرض النص المنطوق في العينة</summary>
+                        <p>
+                            "مرحباً بكم. في الخطوة الأولى من المشروع، نبدأ بتجهيز بيئة العمل واستدعاء المكتبات البرمجية الأساسية... في الكود، نستخدم أمر الاستيراد إمبورت لكل مكتبة، متبوعاً بأمر الطباعة برنت للتأكد من نجاح التحميل. الآن جاء دورك..."
+                        </p>
+                    </details>
+                </div>
+            </div>
+
+            <div class="player-box">
+                <audio controls preload="metadata">
+                    <source src="sample_fusha_zariyah.mp3" type="audio/mpeg">
+                    متصفحك لا يدعم تشغيل ملفات الصوت.
+                </audio>
+                <div class="player-footer">
+                    <span class="now-playing-indicator">
+                        <span class="pulse-dot"></span>
+                        جارٍ الاستماع الآن...
+                    </span>
+                    <span>عينة الخطوة 1 (418 ك.ب)</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Quick Recommendation Box -->
+    <div class="verdict-banner">
+        <div class="verdict-text">
+            <h4>💡 ترشيح فريق العمل للاختيار السريع:</h4>
+            <p>
+                • <strong>للشرح الداخلي الممتع والمريح للأذن داخل الدفتر:</strong> نرشح <strong>سلمى (Salma)</strong> بصوتها المصري الطبيعي السلس والمحبوب.<br>
+                • <strong>للعرض أمام لجان التحكيم ومناقشة التخرج الرسمية:</strong> نرشح <strong>حامد (Hamed)</strong> بفخامته الأكاديمية ورصانة إلقائه.
+            </p>
+        </div>
+    </div>
+
+    <!-- Summary Comparison Matrix -->
+    <div class="matrix-section">
+        <h2 class="section-title">📊 جدول المقارنة والتقييم السريع</h2>
+        <p class="section-desc">نظرة شاملة لمساعدتك على اتخاذ القرار واعتماد الصوت المفضل للمشروع كاملاً:</p>
+        
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>اسم الصوت</th>
+                        <th>المعرف التقني</th>
+                        <th>اللهجة</th>
+                        <th>طبيعة النبرة</th>
+                        <th>سلاسة النطق البرمجي</th>
+                        <th>الاستخدام الموصى به</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="td-name">👩🏻‍💼 سلمى</td>
+                        <td style="font-family: var(--font-mono); font-size: 0.8rem;">ar-EG-SalmaNeural</td>
+                        <td>مصرية طبيعية</td>
+                        <td>ودودة، هادئة، انسيابية</td>
+                        <td><span style="color: #34d399;">⭐⭐⭐⭐⭐ ممتاز</span></td>
+                        <td>الشرح المباشر داخل النوتبوك للمذاكرة</td>
+                    </tr>
+                    <tr>
+                        <td class="td-name">👨🏻‍💻 شاكر (المعدل)</td>
+                        <td style="font-family: var(--font-mono); font-size: 0.8rem;">ar-EG-ShakirNeural</td>
+                        <td>مصرية تقنية</td>
+                        <td>عملية، صوت مهندس برمجي</td>
+                        <td><span style="color: #7dd3fc;">⭐⭐⭐⭐ جيد جداً</span></td>
+                        <td>الكود والتنفيذ البرمجي الميداني</td>
+                    </tr>
+                    <tr>
+                        <td class="td-name">🎓 حامد</td>
+                        <td style="font-family: var(--font-mono); font-size: 0.8rem;">ar-SA-HamedNeural</td>
+                        <td>فصحى معاصرة</td>
+                        <td>أكاديمية، فخمة، رصينة</td>
+                        <td><span style="color: #c084fc;">⭐⭐⭐⭐⭐ ممتاز</span></td>
+                        <td>لجنة المناقشة والعرض الرسمي للجامعة</td>
+                    </tr>
+                    <tr>
+                        <td class="td-name">👩🏻‍🏫 زارية</td>
+                        <td style="font-family: var(--font-mono); font-size: 0.8rem;">ar-SA-ZariyahNeural</td>
+                        <td>فصحى تعليمية</td>
+                        <td>واضحة، تدريبية، صافية</td>
+                        <td><span style="color: #fbbf24;">⭐⭐⭐⭐ جيد جداً</span></td>
+                        <td>التسجيلات والدروس التعليمية المعيارية</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ElevenLabs Studio Upgrade Box -->
+    <div class="elevenlabs-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <span style="font-size: 0.8rem; font-weight: 700; color: #c084fc; letter-spacing: 1px; text-transform: uppercase;">
+                    🚀 الترقية إلى مستوى الاستوديوهات العالمية
+                </span>
+                <h3 style="font-size: 1.4rem; color: #fff; margin-top: 0.3rem;">هل ترغب في صوت بشري فائق الواقعية عبر ElevenLabs؟</h3>
+                <p style="color: var(--text-muted); font-size: 0.92rem; max-width: 680px; margin-top: 0.4rem;">
+                    قمنا ببرمجة وتجهيز سكريبت جاهز تماماً للتشغيل الفوري بنموذج 
+                    <strong style="color: #fff;">ElevenLabs Multilingual v2</strong>. 
+                    بمجرد تزويده بمفتاح حسابك، يمكنك توليد الأصوات بجودة بشرية استثنائية وبأمر واحد.
+                </p>
+            </div>
+            <div style="background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 10px; padding: 0.6rem 1rem; text-align: center;">
+                <div style="font-size: 1.3rem;">🎙️</div>
+                <div style="font-size: 0.8rem; font-weight: 700; color: #c084fc;">Turnkey Ready</div>
+            </div>
+        </div>
+
+        <div class="code-box">
+            <button class="btn-copy" onclick="copyCommand()">📋 نسخ الأمر</button>
+            <div class="code-comment"># تشغيل سكريبت ElevenLabs لتوليد عينة تجريبية أو جميع الخطوات التسع:</div>
+            <span id="cmd-text">python audio/elevenlabs_generator.py --api-key YOUR_ELEVENLABS_KEY --sample</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.75rem;">
+            💡 السكريبت متواجد داخل: <code>audio/elevenlabs_generator.py</code> ويدعم أيضاً التوليد التلقائي لجميع الخطوات عبر معامل <code>--all</code>.
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>مشروع تخرج نظام كشف التسلل السايبراني (X-IDS) • المعهد العالي للهندسة وتكنولوجيا الطيران (HIE)</p>
+        <p style="margin-top: 0.35rem; color: #475569;">تم توليد العينات الصوتية باستخدام نماذج Microsoft Edge Neural TTS و ElevenLabs Multilingual v2</p>
+    </footer>
+
+</div>
+
+<script>
+    // Exclusive Playback: Pause other audio players when one starts playing
+    const audioElements = document.querySelectorAll('audio');
+    const cards = document.querySelectorAll('.voice-card');
+
+    audioElements.forEach(audio => {
+        audio.addEventListener('play', () => {
+            audioElements.forEach(otherAudio => {
+                if (otherAudio !== audio) {
+                    otherAudio.pause();
+                }
+            });
+
+            cards.forEach(c => c.classList.remove('active-playing'));
+            const currentCard = audio.closest('.voice-card');
+            if (currentCard) {
+                currentCard.classList.add('active-playing');
+            }
+        });
+
+        audio.addEventListener('pause', () => {
+            const currentCard = audio.closest('.voice-card');
+            if (currentCard) {
+                currentCard.classList.remove('active-playing');
+            }
+        });
+
+        audio.addEventListener('ended', () => {
+            const currentCard = audio.closest('.voice-card');
+            if (currentCard) {
+                currentCard.classList.remove('active-playing');
+            }
+        });
+    });
+
+    // Copy command functionality
+    function copyCommand() {
+        const cmd = document.getElementById('cmd-text').innerText;
+        navigator.clipboard.writeText(cmd).then(() => {
+            const btn = document.querySelector('.btn-copy');
+            const originalText = btn.innerText;
+            btn.innerText = '✅ تم النسخ!';
+            btn.style.background = '#10b981';
+            btn.style.color = '#fff';
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = '';
+                btn.style.color = '';
+            }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
