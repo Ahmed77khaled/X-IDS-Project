@@ -75,3 +75,5 @@ scratch/
 *.tmp
 .env
 *.env
+
+.vscode/.ext_installed
