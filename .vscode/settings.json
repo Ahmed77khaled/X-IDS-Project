@@ -6,6 +6,7 @@
   "notebook.output.textLineLimit": 100,
   "notebook.formatOnSave.enabled": true,
   "notebook.dragAndDropEnabled": false,
+  "markdown.preview.doubleClickToSwitchToEditor": false,
   "editor.suggestSelection": "first",
   "editor.tabCompletion": "on",
   "python.analysis.autoImportCompletions": true,
