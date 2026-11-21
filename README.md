@@ -63,9 +63,10 @@ Modern Security Operations Centers (SOCs) often struggle with black-box AI model
 
 ```text
 X-IDS-Project/
-├── START_PROJECT.bat              # Autonomous 1-click launcher for Windows
-├── setup.bat                      # Standard environment setup alias
-├── my_model_training.ipynb        # Primary interactive guided notebook (Tasks 1-9)
+├── START_PROJECT.bat              # Autonomous 1-click launcher (Auto-sync, Python, Venv, Kernel, VS Code)
+├── setup_dataset.py               # Intelligent 4-scenario dataset auto-resolver
+├── 01_Data_Cleaning.ipynb         # Milestone 1: Data Preparation & Cleaning (Tasks 1-9 with Audio)
+├── my_model_training.ipynb        # Primary interactive guided notebook
 ├── requirements.txt               # Pinned dependencies for Python
 ├── README.md                      # Unified documentation (English & Arabic RTL)
 ├── .gitignore                     # Optimized exclusion rules (dataset & secrets protected)

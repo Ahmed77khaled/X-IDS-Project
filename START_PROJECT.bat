@@ -11,6 +11,23 @@ echo ===========================================================================
 echo.
 
 :: ----------------------------------------------------------------------------
+:: 0. Check for project updates (Auto-sync latest weekly milestones from GitHub)
+:: ----------------------------------------------------------------------------
+where git >nul 2>&1
+if %errorlevel% equ 0 (
+    if exist .git (
+        echo [*] Checking for new weekly milestones from GitHub...
+        git pull --quiet origin main >nul 2>&1
+        if %errorlevel% equ 0 (
+            echo [OK] Project is up-to-date with GitHub.
+        ) else (
+            echo [INFO] Continuing with current local project files.
+        )
+        echo.
+    )
+)
+
+:: ----------------------------------------------------------------------------
 :: 1. Check Python installation (Auto-install if missing)
 :: ----------------------------------------------------------------------------
 echo [*] Checking Python installation...
@@ -122,8 +139,15 @@ if %errorlevel% equ 0 (
     call code --install-extension ms-toolsai.jupyter --force >nul 2>&1
     echo [OK] VS Code extensions ready.
     echo.
-    echo [*] Auto-launching VS Code with workspace and notebook...
-    code . my_model_training.ipynb
+    echo [*] Auto-launching VS Code with workspace and active notebook...
+    if exist "02_Model_Training_and_Comparison.ipynb" (
+        set ACTIVE_NB=02_Model_Training_and_Comparison.ipynb
+    ) else if exist "01_Data_Cleaning.ipynb" (
+        set ACTIVE_NB=01_Data_Cleaning.ipynb
+    ) else (
+        set ACTIVE_NB=my_model_training.ipynb
+    )
+    code . "!ACTIVE_NB!"
 ) else (
     echo [INFO] 'code' command not found in PATH. Please open VS Code and open this folder.
 )
@@ -136,10 +160,10 @@ echo  [OK] Virtual Environment (.venv) is activated.
 echo  [OK] All ML libraries are verified.
 echo  [OK] Dataset is verified in Dataset\CICIDS2017_improved\
 echo  [OK] Kernel is pre-selected: Python (X-IDS Machine Learning)
-echo  [OK] Notebook 'my_model_training.ipynb' is open and ready.
+echo  [OK] Active Notebook is open and ready.
 echo ==============================================================================
 echo  👉 Everything is automated on the fly!
-echo     Just press the audio play button on each task to listen to Fel7o
+echo     Just press the audio play button on each task to listen to Felho
 echo     and hit (Shift + Enter) to run your code!
 echo ==============================================================================
 echo.
