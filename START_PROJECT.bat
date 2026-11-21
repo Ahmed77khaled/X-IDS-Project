@@ -163,8 +163,8 @@ echo.
 :: ----------------------------------------------------------------------------
 :: 6. Launch VS Code with Active Notebook Immediately
 :: ----------------------------------------------------------------------------
-set "ACTIVE_NB=my_model_training.ipynb"
-if exist "01_Data_Cleaning.ipynb" set "ACTIVE_NB=01_Data_Cleaning.ipynb"
+set "ACTIVE_NB=my_model_training_clean.ipynb"
+if exist "01_Data_Cleaning_Clean.ipynb" set "ACTIVE_NB=01_Data_Cleaning_Clean.ipynb"
 if exist "02_Model_Training_and_Comparison.ipynb" set "ACTIVE_NB=02_Model_Training_and_Comparison.ipynb"
 
 where code >nul 2>&1
