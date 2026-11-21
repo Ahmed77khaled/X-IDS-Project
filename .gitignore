@@ -70,6 +70,7 @@ desktop.ini
 # Temporary intermediate audio files
 audio steps/
 scratch/
+backups/
 *.bak
 *.backup*
 *.tmp
