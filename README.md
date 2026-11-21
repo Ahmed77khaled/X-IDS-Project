@@ -33,11 +33,15 @@ If you are running on Windows, **you do not need to install or configure anythin
    ```bash
    git clone https://github.com/Ahmed77khaled/X-IDS-Project.git
    ```
-2. **Double-click** the launcher script in the project root:
+2. **Double-click** the setup or launcher script in the project root:
    ```text
-   👉 START_PROJECT.bat
+   👉 setup.bat  (or START_PROJECT.bat)
    ```
-3. **What `START_PROJECT.bat` handles automatically:**
+   *For weekly milestone updates with zero data loss:* Double-click:
+   ```text
+   🔄 UPDATE_WEEKLY.bat
+   ```
+3. **What `setup.bat` handles automatically:**
    * ✅ **Python Verification:** Checks if Python is installed; if missing, automatically downloads and installs Python with PATH configuration enabled.
    * ✅ **Virtual Environment:** Creates and isolates `.venv`.
    * ✅ **Dependencies:** Installs all machine learning dependencies (`pandas`, `numpy`, `scikit-learn`, `xgboost`, `shap`, `ipykernel`).
@@ -146,9 +150,13 @@ X-IDS-Project/
    ```bash
    git clone https://github.com/Ahmed77khaled/X-IDS-Project.git
    ```
-2. **اضغط دبل كليك** على ملف التشغيل في المجلد الرئيسي:
+2. **اضغط دبل كليك** على ملف التثبيت والتشغيل في المجلد الرئيسي:
    ```text
-   👉 START_PROJECT.bat
+   👉 setup.bat  (أو START_PROJECT.bat)
+   ```
+   *للتحديث الأسبوعي مع حفظ كودك السابق بأمان:* اضغط دبل كليك على:
+   ```text
+   🔄 UPDATE_WEEKLY.bat
    ```
 3. **السكريبت هيعمل الآتي تلقائياً بالكامل:**
    * ✅ **فحص بايثون:** لو بايثون مش متسطب على جهازك، هيحمله ويسطبه أوتوماتيك ويفعل الـ PATH.

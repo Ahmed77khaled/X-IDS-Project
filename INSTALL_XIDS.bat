@@ -60,4 +60,5 @@ if exist "X-IDS-Project\START_PROJECT.bat" (
     echo [ERROR] تعذر تنزيل المشروع تلقائياً. تأكد من اتصال الإنترنت وحاول مجدداً.
     pause
     exit /b 1
-)
+)
+
