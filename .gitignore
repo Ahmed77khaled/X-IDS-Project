@@ -48,6 +48,9 @@ desktop.ini
 .idea/
 *.swp
 *~
+*.bak
+*.backup*
+*.tmp
 
 # ==============================================================================
 # EXPLICIT INCLUSIONS (Whitelisted Files)
