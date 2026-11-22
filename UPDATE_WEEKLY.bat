@@ -42,7 +42,7 @@ if %errorlevel% neq 0 goto :FALLBACK_ZIP_SYNC
 if not exist ".git" goto :FALLBACK_ZIP_SYNC
 
 echo [*] جاري سحب التحديثات والمواد الجديدة من GitHub...
-git stash push -m "student_work_%TIMESTAMP%" --quiet >nul 2>&1
+git stash push my_model_training.ipynb -m "student_work_%TIMESTAMP%" --quiet >nul 2>&1
 git pull origin main --quiet
 if %errorlevel% equ 0 goto :GIT_PULL_SUCCESS
 echo [INFO] استمرار العمل بالملفات المحلية الحالية.
