@@ -68,9 +68,11 @@ Modern Security Operations Centers (SOCs) often struggle with black-box AI model
 ```text
 X-IDS-Project/
 ├── START_PROJECT.bat              # Autonomous 1-click launcher (Auto-sync, Python, Venv, Kernel, VS Code)
-├── setup_dataset.py               # Intelligent 4-scenario dataset auto-resolver
+├── UPDATE_WEEKLY.bat              # 1-click weekly milestone updater & safe backup
+├── INSTALL_XIDS.bat / setup.bat   # 1-click first-time autonomous installers
 ├── my_model_training.ipynb        # Primary interactive guided notebook (All 9 Milestone Tasks + Audio Guides)
 ├── requirements.txt               # Pinned dependencies for Python
+├── setup.py                       # Project package specification
 ├── README.md                      # Unified documentation (English & Arabic RTL)
 ├── .gitignore                     # Optimized exclusion rules (dataset & secrets protected)
 │
@@ -84,9 +86,18 @@ X-IDS-Project/
 ├── Dataset/                       # Local dataset folder (Excluded from Git / ~1.4GB)
 │   └── CICIDS2017_improved/       # Wednesday-workingHours.pcap_ISCX.csv
 │
-├── Reports/                       # Academic milestones, slide decks, and blueprints
+├── Reports/                       # Academic milestones, slide decks, blueprints & docs
 │   ├── 01_تسليم_المرحلة_الأولى/   # Phase 1 submission report (.docx, .pdf, .pptx)
-│   └── 02_وثائق_المشروع_الرئيسية/  # Graduation project blueprint & architecture
+│   ├── 02_وثائق_المشروع_الرئيسية/  # Graduation project blueprint & architecture
+│   ├── docs/                      # Team guides, technical setup logs & references
+│   └── presentation/              # Interactive HTML presentation deck
+│
+├── scripts/                       # Developer automation tools, pipeline & helpers
+│   ├── setup_dataset.py           # Intelligent 4-scenario dataset auto-resolver
+│   ├── launch_vscode.py           # Multi-path VS Code launcher with active notebook binding
+│   ├── download_data.py           # Dataset integrity & verification manager
+│   ├── x_ids_pipeline.py          # End-to-end ML training & evaluation pipeline
+│   └── ...                        # Generators and maintenance utilities
 │
 └── .vscode/                       # Workspace configurations & auto-bound kernel settings
     ├── settings.json              # Relative interpreter binding (${workspaceFolder}/.venv)

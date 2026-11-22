@@ -16,7 +16,9 @@ import zipfile
 import urllib.request
 from pathlib import Path
 
-DATASET_DIR = Path("Dataset")
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent if SCRIPT_DIR.name == "scripts" else SCRIPT_DIR
+DATASET_DIR = PROJECT_ROOT / "Dataset"
 TARGET_SUBDIR = DATASET_DIR / "CICIDS2017_improved"
 TARGET_FILE = TARGET_SUBDIR / "wednesday.csv"
 DATASET_URL = "https://intrusion-detection.distrinet-research.be/CNS2022/Datasets/CICIDS2017_improved.zip"
@@ -42,6 +44,8 @@ def search_local_files():
     """Search common user folders (Downloads, Desktop, Documents, Project) for dataset files."""
     home = Path.home()
     search_roots = [
+        PROJECT_ROOT,
+        PROJECT_ROOT / "Dataset",
         Path(".").resolve(),
         Path("..").resolve(),
         home / "Downloads",

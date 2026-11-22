@@ -26,11 +26,12 @@ import time
 from pathlib import Path
 
 # Project paths
-PROJECT_ROOT = Path(__file__).resolve().parent
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent if SCRIPT_DIR.name == "scripts" else SCRIPT_DIR
 DATASET_DIR = PROJECT_ROOT / "Dataset"
 IMPROVED_DIR = DATASET_DIR / "CICIDS2017_improved"
 ZIP_PATH = DATASET_DIR / "CICIDS2017_improved.zip"
-SAMPLE_SCRIPT = PROJECT_ROOT / "generate_sample_dataset.py"
+SAMPLE_SCRIPT = SCRIPT_DIR / "generate_sample_dataset.py" if (SCRIPT_DIR / "generate_sample_dataset.py").exists() else PROJECT_ROOT / "generate_sample_dataset.py"
 
 # Expected files and reference statistics (Engelen et al. 2021 Improved Dataset)
 EXPECTED_FILES = {

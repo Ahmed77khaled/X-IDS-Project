@@ -65,7 +65,8 @@ def main():
             sys.exit(0)
         sys.exit(1)
 
-    project_dir = os.path.abspath(os.path.dirname(__file__))
+    script_dir = os.path.abspath(os.path.dirname(__file__))
+    project_dir = os.path.abspath(os.path.join(script_dir, "..")) if os.path.basename(script_dir) == "scripts" else script_dir
     notebook = os.path.join(project_dir, "my_model_training.ipynb")
 
     if detected:

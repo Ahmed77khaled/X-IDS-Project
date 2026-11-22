@@ -90,7 +90,11 @@ echo [OK] كل مكتبات بايثون محدثة وجاهزة.
 :: 4. Verify Dataset & Audios
 :: ----------------------------------------------------------------------------
 echo [*] التحقق من ملفات الصوت والداتا سيت...
-if exist "setup_dataset.py" "%VENV_PY%" setup_dataset.py >nul 2>&1
+if exist "scripts\setup_dataset.py" (
+    "%VENV_PY%" scripts\setup_dataset.py >nul 2>&1
+) else if exist "setup_dataset.py" (
+    "%VENV_PY%" setup_dataset.py >nul 2>&1
+)
 echo [OK] الداتا سيت وملفات الشرح الصوتي جاهزة.
 
 :: ----------------------------------------------------------------------------
@@ -102,14 +106,18 @@ if exist "02_Model_Training_and_Comparison.ipynb" set "ACTIVE_NB=02_Model_Traini
 
 set "VSCODE_CMD="
 
-if exist "launch_vscode.py" (
+set "LAUNCH_PY="
+if exist "scripts\launch_vscode.py" set "LAUNCH_PY=scripts\launch_vscode.py"
+if not defined LAUNCH_PY if exist "launch_vscode.py" set "LAUNCH_PY=launch_vscode.py"
+
+if defined LAUNCH_PY (
     if exist ".venv\Scripts\python.exe" (
-        for /f "usebackq delims=" %%i in (`.venv\Scripts\python.exe launch_vscode.py --detect 2^>nul`) do (
+        for /f "usebackq delims=" %%i in (`.venv\Scripts\python.exe "%LAUNCH_PY%" --detect 2^>nul`) do (
             if exist "%%i" set "VSCODE_CMD=%%i"
         )
     )
     if not defined VSCODE_CMD (
-        for /f "usebackq delims=" %%i in (`python launch_vscode.py --detect 2^>nul`) do (
+        for /f "usebackq delims=" %%i in (`python "%LAUNCH_PY%" --detect 2^>nul`) do (
             if exist "%%i" set "VSCODE_CMD=%%i"
         )
     )

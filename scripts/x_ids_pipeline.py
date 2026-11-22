@@ -31,9 +31,13 @@ from sklearn.metrics import (
 import xgboost as xgb
 import shap
 
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR) if os.path.basename(SCRIPT_DIR) == "scripts" else SCRIPT_DIR
+DEFAULT_DATA_PATH = os.path.join(PROJECT_ROOT, "data", "cic_ids2017_sample.csv")
+
 class XIDSPipeline:
-    def __init__(self, data_path="data/cic_ids2017_sample.csv"):
-        self.data_path = data_path
+    def __init__(self, data_path=None):
+        self.data_path = data_path or DEFAULT_DATA_PATH
         self.raw_df = None
         self.clean_df = None
         self.X_train = None
