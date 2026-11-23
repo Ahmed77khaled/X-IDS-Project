@@ -35,13 +35,13 @@ If you are running on Windows, **you do not need to install or configure anythin
    ```
 2. **Double-click** the setup or launcher script in the project root:
    ```text
-   👉 setup.bat  (or START_PROJECT.bat)
+   👉 START_PROJECT.bat  (or INSTALL_XIDS.bat)
    ```
    *For weekly milestone updates with zero data loss:* Double-click:
    ```text
    🔄 UPDATE_WEEKLY.bat
    ```
-3. **What `setup.bat` handles automatically:**
+3. **What the launcher handles automatically:**
    * ✅ **Python Verification:** Checks if Python is installed; if missing, automatically downloads and installs Python with PATH configuration enabled.
    * ✅ **Virtual Environment:** Creates and isolates `.venv`.
    * ✅ **Dependencies:** Installs all machine learning dependencies (`pandas`, `numpy`, `scikit-learn`, `xgboost`, `shap`, `ipykernel`).
@@ -69,10 +69,9 @@ Modern Security Operations Centers (SOCs) often struggle with black-box AI model
 X-IDS-Project/
 ├── START_PROJECT.bat              # Autonomous 1-click launcher (Auto-sync, Python, Venv, Kernel, VS Code)
 ├── UPDATE_WEEKLY.bat              # 1-click weekly milestone updater & safe backup
-├── INSTALL_XIDS.bat / setup.bat   # 1-click first-time autonomous installers
+├── INSTALL_XIDS.bat               # 1-click first-time autonomous installer
 ├── my_model_training.ipynb        # Primary interactive guided notebook (All 9 Milestone Tasks + Audio Guides)
 ├── requirements.txt               # Pinned dependencies for Python
-├── setup.py                       # Project package specification
 ├── README.md                      # Unified documentation (English & Arabic RTL)
 ├── .gitignore                     # Optimized exclusion rules (dataset & secrets protected)
 │
@@ -158,9 +157,9 @@ X-IDS-Project/
    ```bash
    git clone https://github.com/Ahmed77khaled/X-IDS-Project.git
    ```
-2. **اضغط دبل كليك** على ملف التثبيت والتشغيل في المجلد الرئيسي:
+2. **اضغط دبل كليك** على ملف التشغيل في المجلد الرئيسي:
    ```text
-   👉 setup.bat  (أو START_PROJECT.bat)
+   👉 START_PROJECT.bat  (أو INSTALL_XIDS.bat)
    ```
    *للتحديث الأسبوعي مع حفظ كودك السابق بأمان:* اضغط دبل كليك على:
    ```text
