@@ -27,9 +27,16 @@ if exist "my_model_training.ipynb" (
 )
 
 :: Clean up legacy duplicate files from student's local folder if present
+if exist "setup.bat" del /f /q "setup.bat" >nul 2>&1
+if exist "setup.py" del /f /q "setup.py" >nul 2>&1
 if exist "01_Data_Cleaning.ipynb" move /y "01_Data_Cleaning.ipynb" "backups\legacy_01_Data_Cleaning_%TIMESTAMP%.ipynb" >nul 2>&1
 if exist "01_Data_Cleaning_Clean.ipynb" move /y "01_Data_Cleaning_Clean.ipynb" "backups\legacy_01_Data_Cleaning_Clean_%TIMESTAMP%.ipynb" >nul 2>&1
 if exist "my_model_training_clean.ipynb" move /y "my_model_training_clean.ipynb" "backups\legacy_my_model_training_clean_%TIMESTAMP%.ipynb" >nul 2>&1
+
+:: Remove old developer scripts from root if they already exist in scripts\
+for %%f in (build_guided_notebook.py build_word_and_ppt_reports.py create_notebook.py create_student_notebook.py download_data.py fix_rtl_notebook.py generate_report_evidence.py generate_sample_dataset.py generate_voice_samples.py reset_student_notebook.py update_notebook.py x_ids_pipeline.py design_previews.html shap_feature_importance.png) do (
+    if exist "scripts\%%f" if exist "%%f" del /f /q "%%f" >nul 2>&1
+)
 
 echo [OK] النسخة الاحتياطية جاهزة وآمنة تماماً: backups\my_model_training_backup_%TIMESTAMP%.ipynb
 echo.
@@ -41,17 +48,15 @@ where git >nul 2>&1
 if %errorlevel% neq 0 goto :FALLBACK_ZIP_SYNC
 if not exist ".git" goto :FALLBACK_ZIP_SYNC
 
-echo [*] جاري سحب التحديثات والمواد الجديدة من GitHub...
+echo [*] جاري سحب أحدث التحديثات والمواد من GitHub...
 git stash push my_model_training.ipynb -m "student_work_%TIMESTAMP%" --quiet >nul 2>&1
 git pull origin main --quiet
 if %errorlevel% equ 0 goto :GIT_PULL_SUCCESS
-echo [INFO] استمرار العمل بالملفات المحلية الحالية.
-goto :RESTORE_STASH
+echo [INFO] تعذر الاتصال بـ GitHub، جاري المحاولة عبر التنزيل المباشر...
+goto :FALLBACK_ZIP_SYNC
 
 :GIT_PULL_SUCCESS
 echo [OK] تم سحب أحدث ملفات ومواد الأسبوع بنجاح من GitHub.
-
-:RESTORE_STASH
 git stash pop --quiet >nul 2>&1
 goto :SYNC_DEPENDENCIES
 
@@ -151,9 +156,10 @@ echo.
 echo ==============================================================================
 echo                🎉 تم التحديث الأسبوعي بنجاح تام!
 echo ==============================================================================
-echo  1. أحدث ملفات ومكتبات المشروع نزلت عندك بنجاح.
+echo  1. أحدث ملفات ومكتبات المشروع نزلت عندك بنجاح لأحدث إصدار.
 echo  2. كودك وشغلك السابق محفوظ بأمان تام في مجلد backups.
-echo  3. بيئة العمل والنوت بوك فتحت وجاهزة للعمل فوراً: %ACTIVE_NB%
+echo  3. تم تنظيف المجلد الرئيسي وترتيبه وفقاً لأحدث هيكلة.
+echo  4. بيئة العمل والنوت بوك فتحت وجاهزة للعمل فوراً: %ACTIVE_NB%
 echo ==============================================================================
 echo.
 ping 127.0.0.1 -n 3 >nul 2>&1

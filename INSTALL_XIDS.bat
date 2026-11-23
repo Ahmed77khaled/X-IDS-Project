@@ -6,8 +6,6 @@ setlocal enabledelayedexpansion
 
 title X-IDS: One-Click Installer and Autonomous Setup
 
-
-
 echo ==============================================================================
 
 echo       X-IDS: Explainable Network Intrusion Detection System
@@ -23,8 +21,6 @@ echo [*] أهلاً بك في مشروع التخرج X-IDS.
 echo [*] جاري إعداد وتثبيت كل ما تحتاجه للبدء في المشروع بضغطة زر واحدة...
 
 echo.
-
-
 
 :: ----------------------------------------------------------------------------
 
@@ -42,8 +38,6 @@ if exist "START_PROJECT.bat" (
 
 )
 
-
-
 if exist "X-IDS-Project\START_PROJECT.bat" (
 
     cd X-IDS-Project
@@ -53,8 +47,6 @@ if exist "X-IDS-Project\START_PROJECT.bat" (
     exit /b 0
 
 )
-
-
 
 :: ----------------------------------------------------------------------------
 
@@ -84,8 +76,6 @@ if %errorlevel% equ 0 (
 
 )
 
-
-
 echo [*] جاري التنزيل المباشر عبر PowerShell (Standalone Zip Download)...
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
@@ -101,8 +91,6 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "Remove-Item -Path $zipFile -Force; " ^
 
     "if (Test-Path 'X-IDS-Project-main') { Rename-Item 'X-IDS-Project-main' 'X-IDS-Project' }"
-
-
 
 if exist "X-IDS-Project\START_PROJECT.bat" (
 
@@ -123,6 +111,4 @@ if exist "X-IDS-Project\START_PROJECT.bat" (
     exit /b 1
 
 )
-
-
 
