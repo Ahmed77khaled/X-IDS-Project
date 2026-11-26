@@ -1,5 +1,4 @@
 @echo off
-chcp 65001 > nul
 setlocal
 title X-IDS: Weekly Project Updater and Safe Sync
 
@@ -9,21 +8,21 @@ echo ===========================================================================
 echo       X-IDS Project: Weekly Milestone Updater and Safe Sync Tool
 echo ==============================================================================
 echo.
-echo [*] مرحباً يا هندسة! جاري فحص وتنزيل أحدث مهام ومواد المشروع الأسبوعية...
-echo [*] سيتم حفظ نسخة احتياطية كاملة من كل أكوادك وشغلك السابق تلقائياً.
+echo [*] Checking and pulling latest weekly milestones and assets...
+echo [*] A full backup of your previous work will be preserved automatically.
 echo.
 
 :: ----------------------------------------------------------------------------
 :: 1. Automated Safe Backup of Student Code (Zero Data Loss Guarantee)
 :: ----------------------------------------------------------------------------
-echo [*] جاري أخذ نسخة احتياطية آمنة من شغلك الحالي...
+echo [*] Creating safe timestamped backup of current work...
 if not exist "backups" mkdir backups
 
 for /f "tokens=*" %%t in ('powershell -NoProfile -Command "Get-Date -Format 'yyyyMMdd_HHmmss'"') do set "TIMESTAMP=%%t"
 
 if exist "my_model_training.ipynb" (
     copy /y "my_model_training.ipynb" "backups\my_model_training_backup_%TIMESTAMP%.ipynb" >nul 2>&1
-    echo [OK] تم تأمين نسخة من my_model_training.ipynb في مجلد backups.
+    echo [OK] Backup of my_model_training.ipynb secured in backups/.
 )
 
 :: Clean up legacy duplicate files from student's local folder if present
@@ -38,7 +37,7 @@ for %%f in (build_guided_notebook.py build_word_and_ppt_reports.py create_notebo
     if exist "scripts\%%f" if exist "%%f" del /f /q "%%f" >nul 2>&1
 )
 
-echo [OK] النسخة الاحتياطية جاهزة وآمنة تماماً: backups\my_model_training_backup_%TIMESTAMP%.ipynb
+echo [OK] Backup completed successfully: backups\my_model_training_backup_%TIMESTAMP%.ipynb
 echo.
 
 :: ----------------------------------------------------------------------------
@@ -48,20 +47,20 @@ where git >nul 2>&1
 if %errorlevel% neq 0 goto :FALLBACK_ZIP_SYNC
 if not exist ".git" goto :FALLBACK_ZIP_SYNC
 
-echo [*] جاري سحب أحدث التحديثات والمواد من GitHub...
+echo [*] Pulling latest updates from GitHub...
 git stash push my_model_training.ipynb -m "student_work_%TIMESTAMP%" --quiet >nul 2>&1
 git pull origin main --quiet
 if %errorlevel% equ 0 goto :GIT_PULL_SUCCESS
-echo [INFO] تعذر الاتصال بـ GitHub، جاري المحاولة عبر التنزيل المباشر...
+echo [INFO] GitHub connection busy, falling back to direct package sync...
 goto :FALLBACK_ZIP_SYNC
 
 :GIT_PULL_SUCCESS
-echo [OK] تم سحب أحدث ملفات ومواد الأسبوع بنجاح من GitHub.
+echo [OK] Weekly milestones synced successfully from GitHub.
 git stash pop --quiet >nul 2>&1
 goto :SYNC_DEPENDENCIES
 
 :FALLBACK_ZIP_SYNC
-echo [*] جاري تنزيل أحدث حزمة تحديثات من GitHub عبر PowerShell...
+echo [*] Downloading latest updates package via PowerShell...
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; " ^
     "$tmpZip = Join-Path $env:TEMP 'xids_latest.zip'; " ^
@@ -72,35 +71,35 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "Get-ChildItem -Path $srcDir -Exclude 'my_model_training.ipynb' | ForEach-Object { Copy-Item -Path $_.FullName -Destination . -Recurse -Force }; " ^
     "Remove-Item -Path $tmpZip, $extractDir -Recurse -Force -ErrorAction SilentlyContinue"
 
-echo [OK] تم استلام وتحديث المواد الجديدة بنجاح.
+echo [OK] New materials updated successfully.
 
 :: ----------------------------------------------------------------------------
 :: 3. Sync Python Dependencies
 :: ----------------------------------------------------------------------------
 :SYNC_DEPENDENCIES
 echo.
-echo [*] جاري فحص وتحديث مكتبات الذكاء الاصطناعي...
+echo [*] Checking and updating Python AI packages...
 set "VENV_PY=%~dp0.venv\Scripts\python.exe"
 
 if exist "%VENV_PY%" goto :VENV_EXISTS
-echo [*] جاري تشغيل مثبت البيئة التلقائي...
+echo [*] Initializing automated environment installer...
 call START_PROJECT.bat
 exit /b 0
 
 :VENV_EXISTS
 "%VENV_PY%" -m pip install -r requirements.txt --quiet >nul 2>&1
-echo [OK] كل مكتبات بايثون محدثة وجاهزة.
+echo [OK] All Python dependencies are up-to-date and ready.
 
 :: ----------------------------------------------------------------------------
 :: 4. Verify Dataset & Audios
 :: ----------------------------------------------------------------------------
-echo [*] التحقق من ملفات الصوت والداتا سيت...
+echo [*] Verifying audio assets and dataset files...
 if exist "scripts\setup_dataset.py" (
     "%VENV_PY%" scripts\setup_dataset.py >nul 2>&1
 ) else if exist "setup_dataset.py" (
     "%VENV_PY%" setup_dataset.py >nul 2>&1
 )
-echo [OK] الداتا سيت وملفات الشرح الصوتي جاهزة.
+echo [OK] Datasets and audio assets are ready.
 
 :: ----------------------------------------------------------------------------
 :: 5. Launch VS Code directly on active notebook (Smart Path Detection)
@@ -145,21 +144,21 @@ if not defined VSCODE_CMD (
 )
 
 if defined VSCODE_CMD (
-    echo [OK] تم العثور على Visual Studio Code: "%VSCODE_CMD%"
-    echo [*] جاري فتح VS Code مباشرة على صفحة الشغل: %ACTIVE_NB%...
+    echo [OK] Visual Studio Code located: "%VSCODE_CMD%"
+    echo [*] Opening VS Code directly into workspace: %ACTIVE_NB%...
     start "" "%VSCODE_CMD%" "%~dp0" -g "%~dp0%ACTIVE_NB%"
 ) else (
-    echo [INFO] يمكنك فتح VS Code والبدء في الملف: %ACTIVE_NB%
+    echo [INFO] You can now open VS Code and start working on: %ACTIVE_NB%
 )
 
 echo.
 echo ==============================================================================
-echo                🎉 تم التحديث الأسبوعي بنجاح تام!
+echo               [SUCCESS] Weekly Update Completed!
 echo ==============================================================================
-echo  1. أحدث ملفات ومكتبات المشروع نزلت عندك بنجاح لأحدث إصدار.
-echo  2. كودك وشغلك السابق محفوظ بأمان تام في مجلد backups.
-echo  3. تم تنظيف المجلد الرئيسي وترتيبه وفقاً لأحدث هيكلة.
-echo  4. بيئة العمل والنوت بوك فتحت وجاهزة للعمل فوراً: %ACTIVE_NB%
+echo  1. Latest project materials and libraries updated to the newest version.
+echo  2. Previous student work safely preserved in the backups folder.
+echo  3. Root workspace cleaned and aligned with latest project structure.
+echo  4. Workspace and notebook are open and ready to run: %ACTIVE_NB%
 echo ==============================================================================
 echo.
 ping 127.0.0.1 -n 3 >nul 2>&1
