@@ -13,14 +13,14 @@ if "%1"=="--reinstall" goto :FULL_SETUP
 
 if exist ".venv\Scripts\python.exe" (
     if exist "my_model_training.ipynb" (
-        if exist "Dataset\CICIDS2017_improved" (
+        if exist "Dataset\CICIDS2017_improved\wednesday.csv" (
             goto :FAST_LAUNCH
         )
     )
 )
 
 :FULL_SETUP
-cls
+if not defined CI if not defined GITHUB_ACTIONS cls
 echo ==============================================================================
 echo        X-IDS: Explainable Network Intrusion Detection System
 echo                  Full Environment Setup and Verification
@@ -30,105 +30,143 @@ echo [*] Welcome to X-IDS: Explainable Network Intrusion Detection System.
 echo [*] Performing automated environment verification and setup...
 echo.
 
-:: 1. Intelligent Python Detection
-echo [*] Checking Python installation...
+:: ----------------------------------------------------------------------------
+:: 1. Intelligent Python Detection (Prefers compatible Python 3.8 - 3.11)
+::    Note: pinned requirements (numpy 1.24.4, pandas 2.0.3) require 3.8 - 3.11
+:: ----------------------------------------------------------------------------
+echo [*] Checking compatible Python installation (3.8 - 3.11)...
 set "PY_EXE="
 
-python --version >nul 2>&1
-if %errorlevel% equ 0 (
-    set "PY_EXE=python"
-    goto :PYTHON_LOCATED
+:: Step 1A: Try py launcher for specific compatible versions (3.11 down to 3.8)
+for %%v in (3.11 3.10 3.9 3.8) do (
+    if not defined PY_EXE (
+        for /f "usebackq delims=" %%p in (`py -%%v -c "import sys; print(sys.executable)" 2^>nul`) do (
+            if exist "%%p" set "PY_EXE=%%p"
+        )
+    )
 )
 
-py -3 --version >nul 2>&1
-if %errorlevel% equ 0 (
-    set "PY_EXE=py -3"
-    goto :PYTHON_LOCATED
+:: Step 1B: Check generic python ONLY if version is within 3.8 - 3.11
+if not defined PY_EXE (
+    python -c "import sys; sys.exit(0 if (3,8) <= sys.version_info[:2] <= (3,11) else 1)" >nul 2>&1
+    if !errorlevel! equ 0 (
+        for /f "usebackq delims=" %%p in (`python -c "import sys; print(sys.executable)" 2^>nul`) do (
+            if exist "%%p" set "PY_EXE=%%p"
+        )
+    )
 )
 
-if exist "%LOCALAPPDATA%\Programs\Python\Python311\python.exe" (
-    set "PY_EXE=%LOCALAPPDATA%\Programs\Python\Python311\python.exe"
-    goto :PYTHON_LOCATED
+:: Step 1C: Check standard Windows installation directories (3.11 down to 3.8)
+if not defined PY_EXE (
+    for %%d in (
+        "%LOCALAPPDATA%\Programs\Python\Python311\python.exe"
+        "%LOCALAPPDATA%\Programs\Python\Python310\python.exe"
+        "%LOCALAPPDATA%\Programs\Python\Python39\python.exe"
+        "%LOCALAPPDATA%\Programs\Python\Python38\python.exe"
+        "C:\Program Files\Python311\python.exe"
+        "C:\Program Files\Python310\python.exe"
+        "C:\Python311\python.exe"
+        "C:\Python310\python.exe"
+        "C:\Python38\python.exe"
+    ) do (
+        if not defined PY_EXE if exist %%d set "PY_EXE=%%~d"
+    )
 )
 
-if exist "%LOCALAPPDATA%\Programs\Python\Python310\python.exe" (
-    set "PY_EXE=%LOCALAPPDATA%\Programs\Python\Python310\python.exe"
-    goto :PYTHON_LOCATED
-)
+if defined PY_EXE goto :PYTHON_LOCATED
 
-if exist "%LOCALAPPDATA%\Programs\Python\Python38\python.exe" (
-    set "PY_EXE=%LOCALAPPDATA%\Programs\Python\Python38\python.exe"
-    goto :PYTHON_LOCATED
-)
-
-if exist "C:\Python311\python.exe" (
-    set "PY_EXE=C:\Python311\python.exe"
-    goto :PYTHON_LOCATED
-)
-
-if exist "C:\Python310\python.exe" (
-    set "PY_EXE=C:\Python310\python.exe"
-    goto :PYTHON_LOCATED
-)
-
-:: If python not found, install via winget or direct download
-echo [-] Python is not installed or not in PATH.
-echo [*] Attempting automated Python installation...
+:: Step 1D: Fallback if no compatible Python (3.8 - 3.11) is found
+echo [-] Compatible Python (3.8 - 3.11) was not found in PATH.
+echo [*] Attempting automated Python 3.11.8 installation...
 
 where winget >nul 2>&1
 if %errorlevel% equ 0 (
     winget install -e --id Python.Python.3.11 --accept-package-agreements --accept-source-agreements --silent
-    goto :REFRESH_SYS_PATH
+    if exist "%LOCALAPPDATA%\Programs\Python\Python311\python.exe" set "PY_EXE=%LOCALAPPDATA%\Programs\Python\Python311\python.exe"
+    if not defined PY_EXE if exist "C:\Program Files\Python311\python.exe" set "PY_EXE=C:\Program Files\Python311\python.exe"
+    if defined PY_EXE goto :PYTHON_LOCATED
 )
 
-echo [*] Downloading official Python 3.11 installer...
-powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object System.Net.WebClient).DownloadFile('https://www.python.org/ftp/python/3.11.8/python-3.11.8-amd64.exe', 'python_setup.exe')"
-start /wait python_setup.exe /quiet InstallAllUsers=0 PrependPath=1 Include_pip=1
-if exist python_setup.exe del /f /q python_setup.exe
+echo [*] Downloading official Python 3.11.8 installer...
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object System.Net.WebClient).DownloadFile('https://www.python.org/ftp/python/3.11.8/python-3.11.8-amd64.exe', 'python_setup.exe')"
+if exist python_setup.exe (
+    start /wait python_setup.exe /quiet InstallAllUsers=0 PrependPath=1 Include_pip=1
+    del /f /q python_setup.exe
+)
 
-:REFRESH_SYS_PATH
-set "PY_EXE=python"
+if exist "%LOCALAPPDATA%\Programs\Python\Python311\python.exe" set "PY_EXE=%LOCALAPPDATA%\Programs\Python\Python311\python.exe"
+if not defined PY_EXE if exist "C:\Program Files\Python311\python.exe" set "PY_EXE=C:\Program Files\Python311\python.exe"
+
+if not defined PY_EXE (
+    echo [ERROR] Python 3.11 installation failed or could not be located.
+    echo         Please install Python 3.10 or 3.11 from python.org and check "Add Python to PATH".
+    if not defined CI if not defined GITHUB_ACTIONS pause
+    exit /b 1
+)
 
 :PYTHON_LOCATED
-for /f "tokens=*" %%v in ('!PY_EXE! --version 2^>nul') do set "PYTHON_VER=%%v"
-echo [OK] Python detected: !PYTHON_VER!
+for /f "usebackq tokens=*" %%v in (`""!PY_EXE!" --version"`) do set "PYTHON_VER=%%v"
+echo [OK] Python detected: !PYTHON_VER! (!PY_EXE!)
 echo.
 
+:: ----------------------------------------------------------------------------
 :: 2. Setup Isolated Virtual Environment (.venv)
+:: ----------------------------------------------------------------------------
 if exist ".venv\Scripts\python.exe" goto :VENV_READY
 
 echo [*] Configuring virtual environment .venv...
-!PY_EXE! -m venv --system-site-packages .venv
+"!PY_EXE!" -m venv --system-site-packages .venv
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to initialize virtual environment.
-    pause
+    if not defined CI if not defined GITHUB_ACTIONS pause
     exit /b 1
 )
 
 :VENV_READY
 set "VENV_PY=%~dp0.venv\Scripts\python.exe"
+if not exist "!VENV_PY!" (
+    echo [ERROR] Virtual environment python executable not found: "!VENV_PY!"
+    if not defined CI if not defined GITHUB_ACTIONS pause
+    exit /b 1
+)
 echo [OK] Virtual environment .venv is ready.
 echo.
 
+:: ----------------------------------------------------------------------------
 :: 3. Verify AI / Data Science Libraries
+:: ----------------------------------------------------------------------------
 echo [*] Checking required libraries...
-"!VENV_PY!" -c "import pandas, sklearn, xgboost, ipykernel" >nul 2>&1
+"!VENV_PY!" -c "import pandas, numpy, sklearn, xgboost, shap, ipykernel" >nul 2>&1
 if %errorlevel% equ 0 (
     echo [OK] All core libraries are ready.
 ) else (
     echo [*] Installing requirements from requirements.txt...
-    "!VENV_PY!" -m pip install -r requirements.txt --quiet
+    "!VENV_PY!" -m pip install --upgrade pip --quiet
+    "!VENV_PY!" -m pip install -r requirements.txt
+    if !errorlevel! neq 0 (
+        echo [ERROR] Failed to install required dependencies from requirements.txt.
+        if not defined CI if not defined GITHUB_ACTIONS pause
+        exit /b 1
+    )
     echo [OK] Dependencies installed successfully.
 )
 echo.
 
+:: ----------------------------------------------------------------------------
 :: 4. Register Jupyter Kernel
+:: ----------------------------------------------------------------------------
 echo [*] Auto-binding Jupyter Kernel for VS Code...
 "!VENV_PY!" -m ipykernel install --user --name xids-env --display-name "Python (X-IDS Machine Learning)" >nul 2>&1
-echo [OK] Kernel registered: "Python (X-IDS Machine Learning)"
+if %errorlevel% neq 0 (
+    echo [WARNING] Could not register Jupyter Kernel automatically.
+) else (
+    echo [OK] Kernel registered: "Python (X-IDS Machine Learning)"
+)
 echo.
 
+:: ----------------------------------------------------------------------------
 :: 5. Verify Dataset
+:: ----------------------------------------------------------------------------
 echo [*] Checking dataset availability...
 if exist "scripts\setup_dataset.py" (
     "!VENV_PY!" scripts\setup_dataset.py
@@ -158,12 +196,12 @@ if not defined LAUNCH_PY if exist "launch_vscode.py" set "LAUNCH_PY=launch_vscod
 
 if defined LAUNCH_PY (
     if exist ".venv\Scripts\python.exe" (
-        for /f "usebackq delims=" %%i in (`.venv\Scripts\python.exe "!LAUNCH_PY!" --detect 2^^^>nul`) do (
+        for /f "usebackq delims=" %%i in (`"".venv\Scripts\python.exe" "!LAUNCH_PY!" --detect" 2^>nul`) do (
             if exist "%%i" set "VSCODE_CMD=%%i"
         )
     )
-    if not defined VSCODE_CMD (
-        for /f "usebackq delims=" %%i in (`python "!LAUNCH_PY!" --detect 2^^^>nul`) do (
+    if not defined VSCODE_CMD if defined PY_EXE (
+        for /f "usebackq delims=" %%i in (`""!PY_EXE!" "!LAUNCH_PY!" --detect" 2^>nul`) do (
             if exist "%%i" set "VSCODE_CMD=%%i"
         )
     )
@@ -177,18 +215,28 @@ if not defined VSCODE_CMD (
 
 :: Step C: Known Disk Directories
 if not defined VSCODE_CMD (
-    if exist "%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\Code.exe" set "VSCODE_CMD=%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\Code.exe"
-    if exist "%LOCALAPPDATA%\Programs\Microsoft VS Code\Code.exe" set "VSCODE_CMD=%LOCALAPPDATA%\Programs\Microsoft VS Code\Code.exe"
-    if exist "%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\bin\code.cmd" set "VSCODE_CMD=%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\bin\code.cmd"
-    if exist "%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd" set "VSCODE_CMD=%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd"
-    if exist "%ProgramFiles%\Microsoft VS Code\Code.exe" set "VSCODE_CMD=%ProgramFiles%\Microsoft VS Code\Code.exe"
-    if exist "%ProgramFiles%\Microsoft VS Code\bin\code.cmd" set "VSCODE_CMD=%ProgramFiles%\Microsoft VS Code\bin\code.cmd"
-    if exist "C:\Program Files\Microsoft VS Code\Code.exe" set "VSCODE_CMD=C:\Program Files\Microsoft VS Code\Code.exe"
-    if exist "%ProgramFiles(x86)%\Microsoft VS Code\Code.exe" set "VSCODE_CMD=%ProgramFiles(x86)%\Microsoft VS Code\Code.exe"
+    for %%c in (
+        "%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\Code.exe"
+        "%LOCALAPPDATA%\Programs\Microsoft VS Code\Code.exe"
+        "%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\bin\code.cmd"
+        "%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd"
+        "%ProgramFiles%\Microsoft VS Code\Code.exe"
+        "%ProgramFiles%\Microsoft VS Code\bin\code.cmd"
+        "C:\Program Files\Microsoft VS Code\Code.exe"
+        "%ProgramFiles(x86)%\Microsoft VS Code\Code.exe"
+    ) do (
+        if not defined VSCODE_CMD if exist %%c set "VSCODE_CMD=%%~c"
+    )
 )
 
 :: ----------------------------------------------------------------------------
-:: Launch VS Code or Fallback
+:: Headless CI / GitHub Actions Guard (Never launch GUI or block on menu)
+:: ----------------------------------------------------------------------------
+if defined CI goto :CI_DONE
+if defined GITHUB_ACTIONS goto :CI_DONE
+
+:: ----------------------------------------------------------------------------
+:: Launch VS Code or Fallback (Interactive Local Machine)
 :: ----------------------------------------------------------------------------
 if defined VSCODE_CMD (
     echo [OK] Visual Studio Code located: "!VSCODE_CMD!"
@@ -237,4 +285,13 @@ if "%USER_CHOICE%"=="3" (
     exit /b 0
 )
 
+exit /b 0
+
+:CI_DONE
+echo [CI MODE] Environment setup verified cleanly on headless runner.
+if defined VSCODE_CMD (
+    echo [CI INFO] VS Code detected at: "!VSCODE_CMD!" ^(launch skipped in CI^)
+) else (
+    echo [CI INFO] Interactive menu skipped in CI mode.
+)
 exit /b 0

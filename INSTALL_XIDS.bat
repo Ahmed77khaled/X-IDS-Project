@@ -17,14 +17,14 @@ echo.
 if exist "START_PROJECT.bat" (
     echo [*] Project repository already located. Launching environment...
     call START_PROJECT.bat
-    exit /b 0
+    exit /b %errorlevel%
 )
 
 if exist "X-IDS-Project\START_PROJECT.bat" (
     echo [*] Entering project directory: X-IDS-Project...
     cd X-IDS-Project
     call START_PROJECT.bat
-    exit /b 0
+    exit /b %errorlevel%
 )
 
 :: ----------------------------------------------------------------------------
@@ -39,7 +39,7 @@ if %errorlevel% equ 0 (
         echo [OK] Project cloned successfully via Git.
         cd X-IDS-Project
         call START_PROJECT.bat
-        exit /b 0
+        exit /b %errorlevel%
     )
 )
 
@@ -56,10 +56,10 @@ if exist "X-IDS-Project\START_PROJECT.bat" (
     echo [OK] Project files extracted successfully.
     cd X-IDS-Project
     call START_PROJECT.bat
-    exit /b 0
+    exit /b %errorlevel%
 ) else (
     echo [ERROR] Failed to download project files automatically.
     echo         Please check your internet connection and try again.
-    pause
+    if not defined CI if not defined GITHUB_ACTIONS pause
     exit /b 1
 )

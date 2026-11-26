@@ -142,12 +142,20 @@ def resolve_dataset():
     # -------------------------------------------------------------------------
     # Scenario 4: Missing entirely -> Prompt to auto-download with progress bar
     # -------------------------------------------------------------------------
+    if os.environ.get("XIDS_SKIP_DATASET", "").strip().lower() in ("1", "true", "yes") or "--skip-download" in sys.argv:
+        print("[INFO] XIDS_SKIP_DATASET is enabled; skipping automatic dataset download (~320 MB).")
+        return True
+
     print_banner("DATASET AUTOMATIC DOWNLOADER")
     print("The benchmark dataset (wednesday.csv) was not found on your system.")
     print("Official Research Source:")
     print(f"  {DATASET_URL}\n")
 
-    user_choice = input("Do you want to download it automatically now (~320 MB)? (Y/n): ").strip().lower()
+    try:
+        user_choice = input("Do you want to download it automatically now (~320 MB)? (Y/n): ").strip().lower()
+    except EOFError:
+        print("\n[INFO] Non-interactive terminal detected; skipping dataset download.")
+        return False
     if user_choice not in ["", "y", "yes"]:
         print("\n[!] Download skipped. If you have the file elsewhere, you can place it in:")
         print(f"    {TARGET_FILE.resolve()}")

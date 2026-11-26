@@ -84,10 +84,14 @@ set "VENV_PY=%~dp0.venv\Scripts\python.exe"
 if exist "%VENV_PY%" goto :VENV_EXISTS
 echo [*] Initializing automated environment installer...
 call START_PROJECT.bat
-exit /b 0
+exit /b %errorlevel%
 
 :VENV_EXISTS
 "%VENV_PY%" -m pip install -r requirements.txt --quiet >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [WARNING] Package sync encountered an issue. Re-running without quiet mode...
+    "%VENV_PY%" -m pip install -r requirements.txt
+)
 echo [OK] All Python dependencies are up-to-date and ready.
 
 :: ----------------------------------------------------------------------------
@@ -108,20 +112,22 @@ echo.
 set "ACTIVE_NB=my_model_training.ipynb"
 if exist "02_Model_Training_and_Comparison.ipynb" set "ACTIVE_NB=02_Model_Training_and_Comparison.ipynb"
 
-set "VSCODE_CMD="
+if defined CI goto :CI_SKIP_LAUNCH
+if defined GITHUB_ACTIONS goto :CI_SKIP_LAUNCH
 
+set "VSCODE_CMD="
 set "LAUNCH_PY="
 if exist "scripts\launch_vscode.py" set "LAUNCH_PY=scripts\launch_vscode.py"
 if not defined LAUNCH_PY if exist "launch_vscode.py" set "LAUNCH_PY=launch_vscode.py"
 
 if defined LAUNCH_PY (
     if exist ".venv\Scripts\python.exe" (
-        for /f "usebackq delims=" %%i in (`.venv\Scripts\python.exe "%LAUNCH_PY%" --detect 2^>nul`) do (
+        for /f "usebackq delims=" %%i in (`"".venv\Scripts\python.exe" "%LAUNCH_PY%" --detect" 2^>nul`) do (
             if exist "%%i" set "VSCODE_CMD=%%i"
         )
     )
     if not defined VSCODE_CMD (
-        for /f "usebackq delims=" %%i in (`python "%LAUNCH_PY%" --detect 2^>nul`) do (
+        for /f "usebackq delims=" %%i in (`"python "%LAUNCH_PY%" --detect" 2^>nul`) do (
             if exist "%%i" set "VSCODE_CMD=%%i"
         )
     )
@@ -133,14 +139,18 @@ if not defined VSCODE_CMD (
 )
 
 if not defined VSCODE_CMD (
-    if exist "%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\Code.exe" set "VSCODE_CMD=%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\Code.exe"
-    if exist "%LOCALAPPDATA%\Programs\Microsoft VS Code\Code.exe" set "VSCODE_CMD=%LOCALAPPDATA%\Programs\Microsoft VS Code\Code.exe"
-    if exist "%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\bin\code.cmd" set "VSCODE_CMD=%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\bin\code.cmd"
-    if exist "%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd" set "VSCODE_CMD=%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd"
-    if exist "%ProgramFiles%\Microsoft VS Code\Code.exe" set "VSCODE_CMD=%ProgramFiles%\Microsoft VS Code\Code.exe"
-    if exist "%ProgramFiles%\Microsoft VS Code\bin\code.cmd" set "VSCODE_CMD=%ProgramFiles%\Microsoft VS Code\bin\code.cmd"
-    if exist "C:\Program Files\Microsoft VS Code\Code.exe" set "VSCODE_CMD=C:\Program Files\Microsoft VS Code\Code.exe"
-    if exist "%ProgramFiles(x86)%\Microsoft VS Code\Code.exe" set "VSCODE_CMD=%ProgramFiles(x86)%\Microsoft VS Code\Code.exe"
+    for %%c in (
+        "%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\Code.exe"
+        "%LOCALAPPDATA%\Programs\Microsoft VS Code\Code.exe"
+        "%LOCALAPPDATA%\Programs\Microsoft Visual studio Code\bin\code.cmd"
+        "%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd"
+        "%ProgramFiles%\Microsoft VS Code\Code.exe"
+        "%ProgramFiles%\Microsoft VS Code\bin\code.cmd"
+        "C:\Program Files\Microsoft VS Code\Code.exe"
+        "%ProgramFiles(x86)%\Microsoft VS Code\Code.exe"
+    ) do (
+        if not defined VSCODE_CMD if exist %%c set "VSCODE_CMD=%%~c"
+    )
 )
 
 if defined VSCODE_CMD (
@@ -151,6 +161,7 @@ if defined VSCODE_CMD (
     echo [INFO] You can now open VS Code and start working on: %ACTIVE_NB%
 )
 
+:CI_SKIP_LAUNCH
 echo.
 echo ==============================================================================
 echo               [SUCCESS] Weekly Update Completed!
@@ -161,5 +172,5 @@ echo  3. Root workspace cleaned and aligned with latest project structure.
 echo  4. Workspace and notebook are open and ready to run: %ACTIVE_NB%
 echo ==============================================================================
 echo.
-ping 127.0.0.1 -n 3 >nul 2>&1
+if not defined CI if not defined GITHUB_ACTIONS ping 127.0.0.1 -n 3 >nul 2>&1
 exit /b 0

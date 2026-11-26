@@ -1,0 +1,162 @@
+name: X-IDS Cloud Batch Installer Test (Windows)
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_mode:
+        description: "Which installer scenario to test on clean Windows runner"
+        required: true
+        default: "test_all"
+        type: choice
+        options:
+          - test_all
+          - fresh_install_xids
+          - start_project_only
+          - update_weekly_only
+      download_dataset:
+        description: "Also download full ~320 MB CIC-IDS2017 dataset during test?"
+        required: true
+        default: false
+        type: boolean
+  push:
+    branches: [ main ]
+    paths:
+      - '*.bat'
+      - 'requirements.txt'
+      - 'scripts/setup_dataset.py'
+      - 'scripts/launch_vscode.py'
+      - '.github/workflows/test-batch-installers.yml'
+
+jobs:
+  verify-windows-installers:
+    name: Clean Windows 1-Click Installer Test
+    runs-on: windows-latest
+
+    steps:
+      - name: 1. Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 2. Validate Batch Files (Pure ASCII & Windows CRLF)
+        shell: pwsh
+        run: |
+          $bats = Get-ChildItem -Filter "*.bat"
+          foreach ($bat in $bats) {
+            $bytes = [System.IO.File]::ReadAllBytes($bat.FullName)
+            $nonAscii = ($bytes | Where-Object { $_ -gt 127 }).Count
+            $raw = [System.Text.Encoding]::ASCII.GetString($bytes)
+            $lfOnly = $raw.Replace("`r`n", "").Contains("`n")
+            Write-Host "Checking $($bat.Name): Size=$($bytes.Length) bytes | Non-ASCII=$nonAscii | PureCRLF=$(-not $lfOnly)"
+            if ($nonAscii -gt 0) {
+              throw "$($bat.Name) contains non-ASCII characters (causes ???? in Windows CMD)!"
+            }
+            if ($lfOnly) {
+              throw "$($bat.Name) contains LF-only line endings instead of Windows CRLF!"
+            }
+          }
+          Write-Host "[OK] All batch scripts passed ASCII and CRLF validation."
+
+      - name: 3. Ensure Compatible Python 3.10 Available on Runner
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: 4. Test INSTALL_XIDS.bat in Completely Isolated Temp Folder
+        if: ${{ github.event_name == 'push' || inputs.test_mode == 'test_all' || inputs.test_mode == 'fresh_install_xids' }}
+        shell: pwsh
+        env:
+          XIDS_SKIP_DATASET: ${{ inputs.download_dataset && '0' || '1' }}
+        run: |
+          $cleanDir = Join-Path $env:RUNNER_TEMP "Clean Student Folder (Test)"
+          if (Test-Path $cleanDir) { Remove-Item $cleanDir -Recurse -Force }
+          New-Item -ItemType Directory -Path $cleanDir | Out-Null
+
+          Copy-Item "INSTALL_XIDS.bat" -Destination $cleanDir
+          Write-Host "[*] Isolated clean student directory created: $cleanDir"
+          Write-Host "[*] Directory contents BEFORE running INSTALL_XIDS.bat:"
+          Get-ChildItem $cleanDir
+
+          Push-Location $cleanDir
+          try {
+            cmd /c "INSTALL_XIDS.bat"
+            if ($LASTEXITCODE -ne 0) {
+              throw "INSTALL_XIDS.bat exited with non-zero code: $LASTEXITCODE"
+            }
+
+            $clonedRoot = Join-Path $cleanDir "X-IDS-Project"
+            $venvPy = Join-Path $clonedRoot ".venv\Scripts\python.exe"
+            if (-not (Test-Path $venvPy)) {
+              throw ".venv\Scripts\python.exe was NOT created by INSTALL_XIDS.bat!"
+            }
+
+            Write-Host "[*] Verifying installed AI libraries inside fresh .venv..."
+            & $venvPy -c "import pandas, numpy, sklearn, xgboost, shap, matplotlib, seaborn, jupyter, ipykernel; print('[OK] ALL ML & XAI LIBRARIES IMPORTED CLEANLY!')"
+            if ($LASTEXITCODE -ne 0) {
+              throw "Library verification import failed inside fresh .venv!"
+            }
+          } finally {
+            Pop-Location
+          }
+
+      - name: 5. Test START_PROJECT.bat (Full Setup + Fast-Path Relaunch)
+        if: ${{ github.event_name == 'push' || inputs.test_mode == 'test_all' || inputs.test_mode == 'start_project_only' }}
+        shell: pwsh
+        env:
+          XIDS_SKIP_DATASET: ${{ inputs.download_dataset && '0' || '1' }}
+        run: |
+          Write-Host "[*] Running START_PROJECT.bat --full in repository..."
+          cmd /c "START_PROJECT.bat --full"
+          if ($LASTEXITCODE -ne 0) {
+            throw "START_PROJECT.bat --full failed with exit code $LASTEXITCODE"
+          }
+
+          if (-not (Test-Path ".venv\Scripts\python.exe")) {
+            throw ".venv missing after START_PROJECT.bat!"
+          }
+          & .\.venv\Scripts\python.exe -c "import pandas, numpy, sklearn, xgboost, shap, jupyter; print('[OK] START_PROJECT .venv imports verified!')"
+          if ($LASTEXITCODE -ne 0) {
+            throw "Import check failed in START_PROJECT .venv!"
+          }
+
+          Write-Host "[*] Testing fast-path relaunch (second click)..."
+          cmd /c "START_PROJECT.bat"
+          if ($LASTEXITCODE -ne 0) {
+            throw "START_PROJECT.bat second-run failed with exit code $LASTEXITCODE"
+          }
+
+      - name: 6. Test UPDATE_WEEKLY.bat (Backup + Sync + Root Cleanup)
+        if: ${{ github.event_name == 'push' || inputs.test_mode == 'test_all' || inputs.test_mode == 'update_weekly_only' }}
+        shell: pwsh
+        env:
+          XIDS_SKIP_DATASET: "1"
+        run: |
+          # Ensure git identity & branch tracking exist on runner for git stash/pull test
+          git config user.name "CI Tester"
+          git config user.email "ci-tester@example.com"
+          if ((git rev-parse --abbrev-ref HEAD) -eq "HEAD") {
+            git checkout -B main
+            git branch --set-upstream-to=origin/main main
+          }
+
+          # Simulate messy legacy student files & modified student notebook
+          "legacy" | Out-File "setup.bat" -Encoding ascii
+          "legacy_nb" | Out-File "01_Data_Cleaning.ipynb" -Encoding ascii
+
+          Write-Host "[*] Running UPDATE_WEEKLY.bat..."
+          cmd /c "UPDATE_WEEKLY.bat"
+          if ($LASTEXITCODE -ne 0) {
+            throw "UPDATE_WEEKLY.bat failed with exit code $LASTEXITCODE"
+          }
+
+          $backups = Get-ChildItem "backups\my_model_training_backup_*.ipynb" -ErrorAction SilentlyContinue
+          if (-not $backups) {
+            throw "UPDATE_WEEKLY.bat did NOT create student notebook backup in backups/!"
+          }
+          Write-Host "[OK] Backup created: $($backups[0].Name)"
+
+          if (Test-Path "setup.bat") {
+            throw "Legacy setup.bat was NOT cleaned up by UPDATE_WEEKLY.bat!"
+          }
+          if (Test-Path "01_Data_Cleaning.ipynb") {
+            throw "Legacy 01_Data_Cleaning.ipynb was NOT moved to backups/!"
+          }
+          Write-Host "[OK] UPDATE_WEEKLY.bat passed backup, sync, and cleanup checks!"
